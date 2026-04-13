@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../features/home/bindings/home_binding.dart';
-import '../features/home/views/home_view.dart';
+import '../features/menu/views/nav_bar_screen.dart';
 import '../features/onboarding/bindings/onboarding_binding.dart';
 import '../features/onboarding/views/onboarding_view.dart';
 import '../features/onboarding/views/login_view.dart';
@@ -27,7 +27,7 @@ class AppPages {
     ),
     GetPage<dynamic>(
       name: AppRoutes.home,
-      page: HomeView.new,
+      page: NavBarScreen.new,
       binding: HomeBinding(),
     ),
   ];
