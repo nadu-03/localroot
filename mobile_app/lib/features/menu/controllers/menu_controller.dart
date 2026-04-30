@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../home/views/home_view.dart';
+import '../../home/views/donation_view.dart';
+import '../../home/views/profile_view.dart';
+import '../../home/views/sell_view.dart';
 import '../enums/navbar_type_enum.dart';
 
 class AppMenuController extends GetxController {
@@ -9,9 +12,9 @@ class AppMenuController extends GetxController {
 
   final List<Widget> screenList = const <Widget>[
     HomeView(),
-    _TabPlaceholder(title: 'Sell'),
-    _TabPlaceholder(title: 'Donate'),
-    _TabPlaceholder(title: 'Profile'),
+    SellView(),
+    DonationView(),
+    ProfileView(),
   ];
 
   int get currentIndex => _getNavbarIndex(navbarType.value);
@@ -46,26 +49,5 @@ class AppMenuController extends GetxController {
       case NavbarType.profile:
         return 3;
     }
-  }
-}
-
-class _TabPlaceholder extends StatelessWidget {
-  final String title;
-
-  const _TabPlaceholder({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF1F1F1),
-      body: Center(
-        child: Text(
-          '$title screen',
-          style: Theme.of(
-            context,
-          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
-        ),
-      ),
-    );
   }
 }

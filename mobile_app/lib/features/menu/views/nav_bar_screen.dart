@@ -19,8 +19,8 @@ class NavBarScreen extends GetView<AppMenuController> {
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(
-          margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          // margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(30),
@@ -74,7 +74,7 @@ class _BottomItemWidget extends StatelessWidget {
         ),
         child: Icon(
           _tabIcon(index, isActive),
-          size: 24,
+          size: 34,
           color: isActive ? const Color(0xFF6D4C41) : const Color(0xFF9E9E9E),
         ),
       ),

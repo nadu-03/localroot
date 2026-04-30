@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../menu/controllers/menu_controller.dart';
+import '../../../util/app_routes.dart';
 import '../../../util/color_resources.dart';
 import '../controllers/home_controller.dart';
+import 'drawer_info_views.dart';
+import 'notification_view.dart';
+import 'product_detail_view.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -11,15 +17,16 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
+      endDrawer: _buildRightDrawer(context),
       body: SafeArea(
         child: Column(
           children: [
+            _buildTopHeader(context),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildTopHeader(context),
                     _buildCampaignBanner(context),
                     _buildCategories(context),
                     _buildProductsGrid(context),
@@ -42,14 +49,22 @@ class HomeView extends GetView<HomeController> {
         children: [
           Row(
             children: [
-              Container(
-                width: 34,
-                height: 34,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
+              InkWell(
+                onTap: () => Get.find<AppMenuController>().changeNavBar(3),
+                borderRadius: BorderRadius.circular(17),
+                child: Container(
+                  width: 34,
+                  height: 34,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.person,
+                    color: Colors.black,
+                    size: 24,
+                  ),
                 ),
-                child: const Icon(Icons.person, color: Colors.black, size: 24),
               ),
               const SizedBox(width: 10),
               Text(
@@ -60,9 +75,30 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               const Spacer(),
-              const Icon(Icons.notifications, color: Colors.black, size: 20),
+              IconButton(
+                onPressed: () => Get.to(() => const NotificationView()),
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Colors.black,
+                  size: 20,
+                ),
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+              ),
               const SizedBox(width: 14),
-              const Icon(Icons.menu, color: Colors.black, size: 28),
+              Builder(
+                builder: (ctx) => IconButton(
+                  onPressed: () => Scaffold.of(ctx).openEndDrawer(),
+                  icon: const Icon(Icons.menu, color: Colors.black, size: 28),
+                  visualDensity: VisualDensity.compact,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(
+                    minWidth: 24,
+                    minHeight: 24,
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 14),
@@ -92,80 +128,96 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Widget _buildCampaignBanner(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-      color: const Color(0xFF5E8C39),
-      child: SizedBox(
-        height: 160,
-        child: Stack(
+  Widget _buildRightDrawer(BuildContext context) {
+    return Drawer(
+      child: SafeArea(
+        child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 14, 120, 14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 children: [
-                  Text(
-                    'THRIFTING + DONATION:\nTHE SUSTAINABLE CYCLE',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      height: 1.1,
-                    ),
+                  ListTile(
+                    leading: const Icon(Icons.privacy_tip_outlined),
+                    title: const Text('Privacy Policy'),
+                    onTap: () {
+                      Get.back();
+                      Get.to(() => const PrivacyPolicyView());
+                    },
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'DECLUTTER. SHOP. GIVE BACK\nWITH LocalRoot.',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  ListTile(
+                    leading: const Icon(Icons.gavel_outlined),
+                    title: const Text('Terms & Conditions'),
+                    onTap: () {
+                      Get.back();
+                      Get.to(() => const TermsConditionsView());
+                    },
                   ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/logo.png',
-                        width: 18,
-                        height: 18,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            Icons.eco,
-                            color: Colors.white,
-                            size: 16,
-                          );
-                        },
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'LocalRoot',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                  ListTile(
+                    leading: const Icon(Icons.info_outline),
+                    title: const Text('About Us'),
+                    onTap: () {
+                      Get.back();
+                      Get.to(() => const AboutUsView());
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.contact_mail_outlined),
+                    title: const Text('Contact Us'),
+                    onTap: () {
+                      Get.back();
+                      Get.to(() => const ContactUsView());
+                    },
                   ),
                 ],
               ),
             ),
-            Positioned(
-              right: -14,
-              bottom: -6,
-              child: Image.asset(
-                'assets/images/start_screen_image.png',
-                width: 170,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return const SizedBox(
-                    width: 130,
-                    height: 130,
-                    child: Icon(Icons.phone_iphone, color: Colors.white),
-                  );
-                },
+            const Divider(height: 1),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              child: ListTile(
+                leading: const Icon(Icons.logout, color: Colors.redAccent),
+                title: const Text('Log out'),
+                onTap: () => _showLogoutDialog(context),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Log out'),
+          content: const Text('Are you sure?'),
+          actions: [
+            TextButton(onPressed: () => Get.back(), child: const Text('No')),
+            TextButton(
+              onPressed: () {
+                Get.back();
+                Get.back();
+                Get.offAllNamed(AppRoutes.login);
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCampaignBanner(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: Image.asset(
+          'assets/images/home_banner_1.png',
+          fit: BoxFit.cover,
         ),
       ),
     );
@@ -181,7 +233,7 @@ class HomeView extends GetView<HomeController> {
           Row(
             children: [
               Text(
-                'categories',
+                'Categories',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.w800,
@@ -204,34 +256,41 @@ class HomeView extends GetView<HomeController> {
               separatorBuilder: (_, _) => const SizedBox(width: 12),
               itemBuilder: (context, index) {
                 final category = controller.categories[index];
-                return SizedBox(
-                  width: 64,
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 52,
-                        height: 52,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFFEDEDED),
-                          border: Border.all(color: const Color(0xFFD2D2D2)),
+                return GestureDetector(
+                  onTap: () => controller.openCategory(category),
+                  child: SizedBox(
+                    width: 64,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 52,
+                          height: 52,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0xFFEDEDED),
+                            border: Border.all(color: const Color(0xFFD2D2D2)),
+                          ),
+                          alignment: Alignment.center,
+                          child: ClipOval(
+                            child: _buildAssetImage(
+                              category.imagePath,
+                              width: 44,
+                              height: 44,
+                            ),
+                          ),
                         ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          category.emoji,
-                          style: const TextStyle(fontSize: 22),
+                        const SizedBox(height: 6),
+                        Text(
+                          category.displayName,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        category.name,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
@@ -257,126 +316,168 @@ class HomeView extends GetView<HomeController> {
         ),
         itemBuilder: (context, index) {
           final product = controller.products[index];
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFB8B8B8)),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x22000000),
-                  offset: Offset(1, 2),
-                  blurRadius: 2,
-                ),
-              ],
+          return GestureDetector(
+            onTap: () => Get.to(
+              () =>
+                  ProductDetailView(categoryName: 'Clothes', product: product),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Color(0xFFECECEC), Color(0xFFDCDCDC)],
-                      ),
-                      border: Border.all(color: const Color(0xFFCECECE)),
-                    ),
-                    alignment: Alignment.center,
-                    child: Icon(
-                      index.isEven ? Icons.checkroom : Icons.menu_book,
-                      color: const Color(0xFF8C8C8C),
-                      size: 40,
-                    ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: const Color(0xFFB8B8B8)),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x22000000),
+                    offset: Offset(1, 2),
+                    blurRadius: 2,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 2),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          product.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Color(0xFFECECEC), Color(0xFFDCDCDC)],
                         ),
+                        border: Border.all(color: const Color(0xFFCECECE)),
                       ),
-                      const Icon(
-                        Icons.favorite_border,
-                        size: 20,
-                        color: Color(0xFF8B5A3C),
+                      alignment: Alignment.center,
+                      child: _buildAssetImage(
+                        product.imagePath,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    '${product.priceLkr} LKR',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 24,
-                          alignment: Alignment.center,
-                          color: ColorResources.primaryGreen,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 2),
+                    child: Row(
+                      children: [
+                        Expanded(
                           child: Text(
-                            'Buy now',
-                            style: Theme.of(context).textTheme.bodySmall
+                            product.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                 ),
                           ),
                         ),
+                        const Icon(
+                          Icons.favorite_border,
+                          size: 20,
+                          color: Color(0xFF8B5A3C),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      '${product.priceLkr} LKR',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
                       ),
-                      const SizedBox(width: 4),
-                      Container(
-                        height: 24,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        color: const Color(0xFFECECEC),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.account_circle_outlined,
-                              size: 14,
-                              color: Color(0xFF8B5A3C),
-                            ),
-                            const SizedBox(width: 2),
-                            Text(
-                              product.sellerLabel,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 24,
+                            alignment: Alignment.center,
+                            color: ColorResources.primaryGreen,
+                            child: Text(
+                              'Buy now',
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    color: Color(0xFF8B5A3C),
+                                    color: Colors.black,
                                     fontWeight: FontWeight.w600,
                                   ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 4),
+                        Container(
+                          height: 24,
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          color: const Color(0xFFECECEC),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.account_circle_outlined,
+                                size: 14,
+                                color: Color(0xFF8B5A3C),
+                              ),
+                              const SizedBox(width: 2),
+                              Text(
+                                product.sellerLabel,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Color(0xFF8B5A3C),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _buildAssetImage(
+    String imagePath, {
+    required double width,
+    required double height,
+    BoxFit fit = BoxFit.contain,
+  }) {
+    if (imagePath.toLowerCase().endsWith('.svg')) {
+      return SvgPicture.asset(
+        imagePath,
+        width: width,
+        height: height,
+        fit: fit,
+        placeholderBuilder: (_) => const Icon(
+          Icons.image_outlined,
+          color: Color(0xFF8C8C8C),
+          size: 24,
+        ),
+      );
+    }
+
+    return Image.asset(
+      imagePath,
+      width: width,
+      height: height,
+      fit: fit,
+      errorBuilder: (context, error, stackTrace) {
+        return const Icon(
+          Icons.image_not_supported,
+          color: Color(0xFF8C8C8C),
+          size: 24,
+        );
+      },
     );
   }
 }
