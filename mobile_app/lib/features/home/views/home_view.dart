@@ -282,54 +282,77 @@ class HomeView extends GetView<HomeController> {
             ],
           ),
           const SizedBox(height: 10),
-          SizedBox(
-            height: 86,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: controller.categories.length,
-              separatorBuilder: (_, _) => const SizedBox(width: 12),
-              itemBuilder: (context, index) {
-                final category = controller.categories[index];
-                return GestureDetector(
-                  onTap: () => controller.openCategory(category),
-                  child: SizedBox(
-                    width: 64,
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 52,
-                          height: 52,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: const Color(0xFFEDEDED),
-                            border: Border.all(color: const Color(0xFFD2D2D2)),
-                          ),
-                          alignment: Alignment.center,
-                          child: ClipOval(
-                            child: _buildAssetImage(
-                              category.imagePath,
-                              width: 44,
-                              height: 44,
+          Obx(() {
+            if (controller.isLoadingCategories.value) {
+              return const SizedBox(
+                height: 86,
+                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+              );
+            }
+
+            if (controller.categories.isEmpty) {
+              return SizedBox(
+                height: 86,
+                child: Center(
+                  child: Text(
+                    'No categories available',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              );
+            }
+
+            return SizedBox(
+              height: 86,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: controller.categories.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  final category = controller.categories[index];
+                  return GestureDetector(
+                    onTap: () => controller.openCategory(category),
+                    child: SizedBox(
+                      width: 64,
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: const Color(0xFFEDEDED),
+                              border: Border.all(
+                                color: const Color(0xFFD2D2D2),
+                              ),
+                            ),
+                            alignment: Alignment.center,
+                            child: ClipOval(
+                              child: _buildAssetImage(
+                                category.imagePath,
+                                width: 44,
+                                height: 44,
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          category.displayName,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                      ],
+                          const SizedBox(height: 6),
+                          Text(
+                            category.displayName,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ),
+                  );
+                },
+              ),
+            );
+          }),
         ],
       ),
     );

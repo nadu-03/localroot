@@ -1,37 +1,86 @@
 import 'package:get/get.dart';
 
+import '../../../data/api/api_exceptions.dart';
+import '../../../data/api/api_manager.dart';
+import '../../../util/app_constant.dart';
 import '../views/category_products_view.dart';
 
 class HomeController extends GetxController {
   final selectedTabIndex = 0.obs;
+  final isLoadingCategories = false.obs;
 
-  final categories = const <HomeCategory>[
-    HomeCategory(
-      key: 'clothes',
-      displayName: 'Clothes',
-      imagePath: 'assets/images/clothes.png',
-    ),
-    HomeCategory(
-      key: 'books',
-      displayName: 'Books',
-      imagePath: 'assets/images/books.png',
-    ),
-    HomeCategory(
-      key: 'furniture',
-      displayName: 'Furniture',
-      imagePath: 'assets/images/furniture.png',
-    ),
-    HomeCategory(
-      key: 'decos',
-      displayName: 'Decos',
-      imagePath: 'assets/images/decos.png',
-    ),
-    HomeCategory(
-      key: 'others',
-      displayName: 'Others',
-      imagePath: 'assets/images/clothes.png',
-    ),
+  final categories = <HomeCategory>[].obs;
+
+  static const List<String> _sampleCategoryImages = [
+    'assets/images/clothes.png',
+    'assets/images/books.png',
+    'assets/images/furniture.png',
+    'assets/images/decos.png',
+    'assets/images/logo.png',
   ];
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadCategories();
+  }
+
+  Future<void> loadCategories() async {
+    isLoadingCategories.value = true;
+    try {
+      final response = await ApiManager.instance.get(
+        AppConstant.getAllCategories,
+      );
+      final responseData = response.data;
+      final rawCategories = responseData is Map && responseData['data'] != null
+          ? responseData['data']
+          : responseData;
+
+      final loadedCategories = <HomeCategory>[];
+      if (rawCategories is List) {
+        for (var index = 0; index < rawCategories.length; index++) {
+          final entry = rawCategories[index];
+          if (entry is Map) {
+            final idValue = entry['id'] ?? entry['category_id'];
+            final nameValue =
+                entry['name'] ?? entry['title'] ?? entry['category_name'];
+            final parsedId = int.tryParse(idValue?.toString() ?? '');
+            final parsedName = nameValue?.toString();
+            if (parsedId != null &&
+                parsedName != null &&
+                parsedName.isNotEmpty) {
+              loadedCategories.add(
+                HomeCategory(
+                  id: parsedId,
+                  key: _normalizeCategoryKey(parsedName),
+                  displayName: parsedName,
+                  imagePath:
+                      _sampleCategoryImages[index %
+                          _sampleCategoryImages.length],
+                ),
+              );
+            }
+          }
+        }
+      }
+
+      categories.assignAll(loadedCategories);
+    } on ApiException catch (e) {
+      Get.snackbar('Categories', e.message, snackPosition: SnackPosition.TOP);
+    } catch (_) {
+      Get.snackbar(
+        'Categories',
+        'Failed to load categories',
+        snackPosition: SnackPosition.TOP,
+      );
+    } finally {
+      isLoadingCategories.value = false;
+    }
+  }
+
+  String _normalizeCategoryKey(String value) {
+    return value.trim().toLowerCase().replaceAll(' ', '_');
+  }
 
   final products = const <HomeProduct>[
     HomeProduct(
@@ -148,11 +197,13 @@ class HomeController extends GetxController {
 }
 
 class HomeCategory {
+  final int id;
   final String key;
   final String displayName;
   final String imagePath;
 
   const HomeCategory({
+    required this.id,
     required this.key,
     required this.displayName,
     required this.imagePath,
