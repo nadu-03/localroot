@@ -123,16 +123,21 @@ class SignUpController extends GetxController {
 
           Get.offAllNamed(AppRoutes.home);
         } else {
-          Get.snackbar('Sign up failed', 'Missing authentication token');
+          Get.snackbar(
+            'Sign up failed',
+            'Missing authentication token',
+            snackPosition: SnackPosition.TOP,
+          );
         }
       } else {
         Get.snackbar(
           'Sign up failed',
           resp.data?['message']?.toString() ?? 'Unknown error',
+          snackPosition: SnackPosition.TOP,
         );
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.TOP);
     }
   }
 

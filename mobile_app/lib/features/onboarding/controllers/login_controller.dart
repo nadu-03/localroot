@@ -78,16 +78,21 @@ class LoginController extends GetxController {
 
           Get.offAllNamed(AppRoutes.home);
         } else {
-          Get.snackbar('Login failed', 'Missing authentication token');
+          Get.snackbar(
+            'Login failed',
+            'Missing authentication token',
+            snackPosition: SnackPosition.TOP,
+          );
         }
       } else {
         Get.snackbar(
           'Login failed',
           resp.data?['message']?.toString() ?? 'Unknown error',
+          snackPosition: SnackPosition.TOP,
         );
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.TOP);
     }
   }
 

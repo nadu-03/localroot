@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 
 import '../../menu/controllers/menu_controller.dart';
 import '../../../util/app_routes.dart';
+import '../../../util/app_constant.dart';
 import '../../../util/color_resources.dart';
+import '../../../data/api/api_manager.dart';
 import '../../../common/controllers/user_controller.dart';
 import '../controllers/home_controller.dart';
 import 'drawer_info_views.dart';
@@ -201,10 +203,38 @@ class HomeView extends GetView<HomeController> {
           actions: [
             TextButton(onPressed: () => Get.back(), child: const Text('No')),
             TextButton(
-              onPressed: () {
-                Get.back();
-                Get.back();
+              onPressed: () async {
+                String snackTitle = 'Success';
+                String snackMessage = 'Logged out successfully';
+                Color snackColor = Colors.green;
+                try {
+                  final resp = await ApiManager.instance.post(
+                    AppConstant.authLogout,
+                  );
+                  snackMessage =
+                      resp.data?['message']?.toString() ??
+                      'Logged out successfully';
+                } catch (e) {
+                  debugPrint('Logout API error: $e');
+                  snackTitle = 'Error';
+                  snackMessage = 'Logout failed';
+                  snackColor = Colors.red;
+                }
+                try {
+                  final userController = Get.find<UserController>();
+                  await userController.logout();
+                } catch (_) {}
+                Get.back(closeOverlays: true);
                 Get.offAllNamed(AppRoutes.login);
+                Future.delayed(const Duration(milliseconds: 150), () {
+                  Get.snackbar(
+                    snackTitle,
+                    snackMessage,
+                    snackPosition: SnackPosition.TOP,
+                    backgroundColor: snackColor,
+                    colorText: Colors.white,
+                  );
+                });
               },
               child: const Text('Yes'),
             ),

@@ -21,6 +21,7 @@ class AppConstant {
   static const String createProduct = '/products';
   static const String updateProduct = '/products';
   static const String deleteProduct = '/products';
+  static const String createItem = '/items';
 
   // Category Endpoints
   static const String getAllCategories = '/categories';
