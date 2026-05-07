@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
+import '../common/controllers/user_controller.dart';
 
 class InitialBinding extends Bindings {
   @override
   void dependencies() {
-    // Register global app-level dependencies here.
+    Get.put(UserController());
   }
 }

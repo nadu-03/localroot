@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../menu/controllers/menu_controller.dart';
 import '../../../util/app_routes.dart';
 import '../../../util/color_resources.dart';
+import '../../../common/controllers/user_controller.dart';
 import '../controllers/home_controller.dart';
 import 'drawer_info_views.dart';
 import 'notification_view.dart';
@@ -42,6 +43,7 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _buildTopHeader(BuildContext context) {
+    final userController = Get.find<UserController>();
     return Container(
       color: ColorResources.primaryGreen,
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
@@ -67,11 +69,13 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               const SizedBox(width: 10),
-              Text(
-                'Hi Naduni,',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
+              Obx(
+                () => Text(
+                  'Hi ${userController.user.value?.username ?? 'User'},',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               const Spacer(),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 import '../../../util/color_resources.dart';
+import '../../../common/controllers/user_controller.dart';
 import '../controllers/home_controller.dart';
 
 class ProductDetailView extends StatelessWidget {
@@ -203,13 +205,16 @@ class ProductDetailView extends StatelessWidget {
             child: const Icon(Icons.person, color: Colors.black, size: 24),
           ),
           const SizedBox(width: 10),
-          Text(
-            'Hi Naduni,',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          Obx(() {
+            final userController = Get.find<UserController>();
+            return Text(
+              'Hi ${userController.user.value?.username ?? 'User'},',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+          }),
           const Spacer(),
           const Icon(Icons.notifications, color: Colors.black, size: 20),
           const SizedBox(width: 14),

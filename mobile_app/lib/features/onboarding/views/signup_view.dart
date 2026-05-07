@@ -41,102 +41,54 @@ class SignUpView extends GetView<SignUpController> {
                 ),
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(24, 16, 24, 18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Sign Up',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.displaySmall
-                            ?.copyWith(
-                              color: ColorResources.accentBrown,
-                              fontWeight: FontWeight.w800,
-                            ),
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Already have an account? ',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(
-                                  color: ColorResources.accentBrown,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                          ),
-                          GestureDetector(
-                            onTap: controller.goToLogin,
-                            child: Text(
-                              'Login',
+                  child: Form(
+                    key: controller.formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Sign Up',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(
+                                color: ColorResources.accentBrown,
+                                fontWeight: FontWeight.w800,
+                              ),
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Already have an account? ',
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(
-                                    color: ColorResources.primaryGreen,
+                                    color: ColorResources.accentBrown,
                                     fontWeight: FontWeight.w700,
-                                    decoration: TextDecoration.underline,
                                   ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      TextField(
-                        controller: controller.firstNameController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter First Name',
-                          fillColor: const Color(0xFFD9D9D9),
-                          filled: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
+                            GestureDetector(
+                              onTap: controller.goToLogin,
+                              child: Text(
+                                'Login',
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(
+                                      color: ColorResources.primaryGreen,
+                                      fontWeight: FontWeight.w700,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: controller.lastNameController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter Last Name',
-                          fillColor: const Color(0xFFD9D9D9),
-                          filled: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: controller.emailController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter email address',
-                          fillColor: const Color(0xFFD9D9D9),
-                          filled: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 10,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Obx(
-                        () => TextField(
-                          controller: controller.passwordController,
-                          obscureText: !controller.showPassword.value,
+                        const SizedBox(height: 14),
+                        TextFormField(
+                          controller: controller.firstNameController,
+                          validator: (value) =>
+                              controller.validateName(value, 'First name'),
+                          textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
-                            hintText: 'Create Password',
+                            hintText: 'Enter First Name',
                             fillColor: const Color(0xFFD9D9D9),
                             filled: true,
                             contentPadding: const EdgeInsets.symmetric(
@@ -147,84 +99,178 @@ class SignUpView extends GetView<SignUpController> {
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide.none,
                             ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                controller.showPassword.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                size: 20,
-                                color: Colors.black,
-                              ),
-                              onPressed: controller.toggleShowPassword,
-                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Obx(
-                            () => Row(
-                              children: [
-                                Transform.scale(
-                                  scale: 0.9,
-                                  child: Checkbox(
-                                    value: controller.rememberMe.value,
-                                    onChanged: (_) =>
-                                        controller.toggleRememberMe(),
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                    side: const BorderSide(
-                                      color: Color(0xFFCFCFCF),
-                                    ),
-                                    activeColor: ColorResources.primaryGreen,
-                                  ),
-                                ),
-                                Text(
-                                  'Remember me',
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        color: ColorResources.accentBrown,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                ),
-                              ],
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: controller.lastNameController,
+                          validator: (value) =>
+                              controller.validateName(value, 'Last name'),
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            hintText: 'Enter Last Name',
+                            fillColor: const Color(0xFFD9D9D9),
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
                             ),
-                          ),
-                          Text(
-                            'Forgot Password?',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: ColorResources.accentBrown,
-                                  fontWeight: FontWeight.w700,
-                                  decoration: TextDecoration.underline,
-                                ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        height: 44,
-                        child: ElevatedButton(
-                          onPressed: controller.signUp,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorResources.primaryGreen,
-                            shape: RoundedRectangleBorder(
+                            border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
                             ),
                           ),
-                          child: Text(
-                            'Login',
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(
-                                  color: ColorResources.accentBrown,
-                                  fontWeight: FontWeight.w800,
-                                ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: controller.emailController,
+                          validator: controller.validateEmail,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            hintText: 'Enter email address',
+                            fillColor: const Color(0xFFD9D9D9),
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 10),
+                        Obx(
+                          () => TextFormField(
+                            controller: controller.passwordController,
+                            validator: controller.validatePassword,
+                            obscureText: !controller.showPassword.value,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              hintText: 'Create Password',
+                              fillColor: const Color(0xFFD9D9D9),
+                              filled: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  controller.showPassword.value
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  size: 20,
+                                  color: Colors.black,
+                                ),
+                                onPressed: controller.toggleShowPassword,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Obx(
+                          () => TextFormField(
+                            controller: controller.confirmPasswordController,
+                            validator: controller.validateConfirmPassword,
+                            obscureText: !controller.showConfirmPassword.value,
+                            textInputAction: TextInputAction.done,
+                            decoration: InputDecoration(
+                              hintText: 'Confirm Password',
+                              fillColor: const Color(0xFFD9D9D9),
+                              filled: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  controller.showConfirmPassword.value
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  size: 20,
+                                  color: Colors.black,
+                                ),
+                                onPressed: controller.toggleShowConfirmPassword,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Obx(
+                              () => Row(
+                                children: [
+                                  Transform.scale(
+                                    scale: 0.9,
+                                    child: Checkbox(
+                                      value: controller.rememberMe.value,
+                                      onChanged: (_) =>
+                                          controller.toggleRememberMe(),
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      side: const BorderSide(
+                                        color: Color(0xFFCFCFCF),
+                                      ),
+                                      activeColor: ColorResources.primaryGreen,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Remember me',
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: ColorResources.accentBrown,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              'Forgot Password?',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: ColorResources.accentBrown,
+                                    fontWeight: FontWeight.w700,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 44,
+                          child: ElevatedButton(
+                            onPressed: controller.signUp,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorResources.primaryGreen,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              'Sign Up',
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(
+                                    color: ColorResources.accentBrown,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
