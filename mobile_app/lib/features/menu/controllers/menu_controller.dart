@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../home/views/home_view.dart';
-import '../../home/views/donation_view.dart';
+import '../../donation/views/donation_view.dart';
 import '../../home/views/profile_view.dart';
-import '../../home/views/sell_view.dart';
+import '../../seller/views/sell_view.dart';
 import '../enums/navbar_type_enum.dart';
 
 class AppMenuController extends GetxController {

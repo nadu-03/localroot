@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:convert';
+
+import '../../../util/app_constant.dart';
 import 'package:get/get.dart';
 
 import '../../menu/controllers/menu_controller.dart';
 import '../../../util/app_routes.dart';
-import '../../../util/app_constant.dart';
 import '../../../util/color_resources.dart';
 import '../../../data/api/api_manager.dart';
 import '../../../common/controllers/user_controller.dart';
@@ -509,32 +511,110 @@ class HomeView extends GetView<HomeController> {
     required double height,
     BoxFit fit = BoxFit.contain,
   }) {
-    if (imagePath.toLowerCase().endsWith('.svg')) {
-      return SvgPicture.asset(
+    try {
+      final lower = imagePath.toLowerCase();
+
+      // Data URI (base64) e.g. data:image/svg+xml;base64,...
+      if (lower.startsWith('data:')) {
+        final comma = imagePath.indexOf(',');
+        if (comma != -1) {
+          final meta = imagePath.substring(5, comma);
+          final data = imagePath.substring(comma + 1);
+          final bytes = base64Decode(data);
+          if (meta.contains('svg')) {
+            return SvgPicture.memory(
+              bytes,
+              width: width,
+              height: height,
+              fit: fit,
+              placeholderBuilder: (_) => const Icon(
+                Icons.image_outlined,
+                color: Color(0xFF8C8C8C),
+                size: 24,
+              ),
+            );
+          }
+
+          return Image.memory(
+            bytes,
+            width: width,
+            height: height,
+            fit: fit,
+            errorBuilder: (context, error, stackTrace) => const Icon(
+              Icons.image_not_supported,
+              color: Color(0xFF8C8C8C),
+              size: 24,
+            ),
+          );
+        }
+      }
+
+      // If imagePath looks like a server media path, construct full URL
+      if (imagePath.startsWith('/media') || imagePath.startsWith('media/')) {
+        final url = AppConstant.baseUrl + imagePath;
+        return Image.network(
+          url,
+          width: width,
+          height: height,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) => const Icon(
+            Icons.image_not_supported,
+            color: Color(0xFF8C8C8C),
+            size: 24,
+          ),
+        );
+      }
+
+      // SVG asset path
+      if (lower.endsWith('.svg')) {
+        return SvgPicture.asset(
+          imagePath,
+          width: width,
+          height: height,
+          fit: fit,
+          placeholderBuilder: (_) => const Icon(
+            Icons.image_outlined,
+            color: Color(0xFF8C8C8C),
+            size: 24,
+          ),
+        );
+      }
+
+      // Network absolute URL
+      if (lower.startsWith('http://') || lower.startsWith('https://')) {
+        return Image.network(
+          imagePath,
+          width: width,
+          height: height,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) => const Icon(
+            Icons.image_not_supported,
+            color: Color(0xFF8C8C8C),
+            size: 24,
+          ),
+        );
+      }
+
+      // Fallback to asset
+      return Image.asset(
         imagePath,
         width: width,
         height: height,
         fit: fit,
-        placeholderBuilder: (_) => const Icon(
-          Icons.image_outlined,
-          color: Color(0xFF8C8C8C),
-          size: 24,
-        ),
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(
+            Icons.image_not_supported,
+            color: Color(0xFF8C8C8C),
+            size: 24,
+          );
+        },
+      );
+    } catch (_) {
+      return const Icon(
+        Icons.image_not_supported,
+        color: Color(0xFF8C8C8C),
+        size: 24,
       );
     }
-
-    return Image.asset(
-      imagePath,
-      width: width,
-      height: height,
-      fit: fit,
-      errorBuilder: (context, error, stackTrace) {
-        return const Icon(
-          Icons.image_not_supported,
-          color: Color(0xFF8C8C8C),
-          size: 24,
-        );
-      },
-    );
   }
 }

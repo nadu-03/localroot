@@ -87,7 +87,7 @@ class SignUpController extends GetxController {
     final password = passwordController.text;
 
     final username = (firstName.isNotEmpty && lastName.isNotEmpty)
-        ? '${firstName}_$lastName'
+        ? '${firstName} $lastName'
         : firstName.isNotEmpty
         ? firstName
         : email.split('@').first;

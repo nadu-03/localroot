@@ -49,14 +49,19 @@ class HomeController extends GetxController {
             if (parsedId != null &&
                 parsedName != null &&
                 parsedName.isNotEmpty) {
+              // Use image from API when available (can be data URI or path),
+              // otherwise fall back to bundled sample images.
+              final apiImage = entry['image']?.toString();
+              final imagePath = (apiImage != null && apiImage.isNotEmpty)
+                  ? apiImage
+                  : _sampleCategoryImages[index % _sampleCategoryImages.length];
+
               loadedCategories.add(
                 HomeCategory(
                   id: parsedId,
                   key: _normalizeCategoryKey(parsedName),
                   displayName: parsedName,
-                  imagePath:
-                      _sampleCategoryImages[index %
-                          _sampleCategoryImages.length],
+                  imagePath: imagePath,
                 ),
               );
             }

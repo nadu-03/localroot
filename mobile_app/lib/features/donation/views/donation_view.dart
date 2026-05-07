@@ -4,10 +4,10 @@ import '../../../common/controllers/user_controller.dart';
 
 import '../../menu/controllers/menu_controller.dart';
 import '../../../util/color_resources.dart';
-import 'ai_chat_bot_view.dart';
+import '../../../features/home/views/ai_chat_bot_view.dart';
+import '../views/donation_centers_view.dart';
 import '../../seller/views/add_new_item_view.dart';
 import '../../seller/bindings/seller_binding.dart';
-import 'donation_centers_view.dart';
 
 class DonationView extends StatelessWidget {
   const DonationView({super.key});

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:convert';
+
+import '../../../util/app_constant.dart';
 import 'package:get/get.dart';
 import '../../../common/controllers/user_controller.dart';
 
@@ -264,32 +267,82 @@ class _ProductCard extends StatelessWidget {
   }
 
   Widget _buildAssetImage(String imagePath) {
-    if (imagePath.toLowerCase().endsWith('.svg')) {
-      return SvgPicture.asset(
+    try {
+      final lower = imagePath.toLowerCase();
+      if (lower.startsWith('data:')) {
+        final comma = imagePath.indexOf(',');
+        if (comma != -1) {
+          final meta = imagePath.substring(5, comma);
+          final data = imagePath.substring(comma + 1);
+          final bytes = base64Decode(data);
+          if (meta.contains('svg')) {
+            return SvgPicture.memory(
+              bytes,
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+            );
+          }
+          return Image.memory(
+            bytes,
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          );
+        }
+      }
+
+      if (imagePath.startsWith('/media') || imagePath.startsWith('media/')) {
+        return Image.network(
+          AppConstant.baseUrl + imagePath,
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => const Icon(
+            Icons.image_not_supported,
+            color: Color(0xFF8C8C8C),
+            size: 24,
+          ),
+        );
+      }
+
+      if (lower.endsWith('.svg')) {
+        return SvgPicture.asset(
+          imagePath,
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+        );
+      }
+
+      if (lower.startsWith('http://') || lower.startsWith('https://')) {
+        return Image.network(
+          imagePath,
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+        );
+      }
+
+      return Image.asset(
         imagePath,
         width: double.infinity,
         height: double.infinity,
         fit: BoxFit.cover,
-        placeholderBuilder: (_) => const Icon(
-          Icons.image_outlined,
-          color: Color(0xFF8C8C8C),
-          size: 24,
-        ),
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(
+            Icons.image_not_supported,
+            color: Color(0xFF8C8C8C),
+            size: 24,
+          );
+        },
+      );
+    } catch (_) {
+      return const Icon(
+        Icons.image_not_supported,
+        color: Color(0xFF8C8C8C),
+        size: 24,
       );
     }
-
-    return Image.asset(
-      imagePath,
-      width: double.infinity,
-      height: double.infinity,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
-        return const Icon(
-          Icons.image_not_supported,
-          color: Color(0xFF8C8C8C),
-          size: 24,
-        );
-      },
-    );
   }
 }

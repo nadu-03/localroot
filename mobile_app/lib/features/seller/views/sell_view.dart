@@ -4,10 +4,10 @@ import '../../../common/controllers/user_controller.dart';
 
 import '../../menu/controllers/menu_controller.dart';
 import '../../../util/color_resources.dart';
-import '../../seller/views/add_new_item_view.dart';
-import '../../seller/bindings/seller_binding.dart';
+import 'add_new_item_view.dart';
+import '../bindings/seller_binding.dart';
 import 'view_listing_view.dart';
-import 'user_chat_view.dart';
+import '../../../features/home/views/user_chat_view.dart';
 
 class SellView extends StatelessWidget {
   const SellView({super.key});
