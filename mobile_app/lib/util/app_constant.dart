@@ -1,0 +1,53 @@
+class AppConstant {
+  // Base URL - Change this to your actual API base URL
+  // static const String baseUrl = 'http://localhost:3001/api';
+  static const String baseUrl = 'http://10.0.2.2:3000'; // For emulator testing
+  // static const String baseUrl = 'https://api.example.com'; // For production
+
+  // Auth Endpoints
+  static const String authSignIn = '/auth/signin';
+  static const String authSignUp = '/auth/signup';
+  static const String authLogout = '/auth/logout';
+  static const String authRefresh = '/auth/refresh';
+
+  // User Endpoints
+  static const String getUserProfile = '/users/profile';
+  static const String updateUserProfile = '/users/profile';
+  static const String getUserById = '/users';
+
+  // Product Endpoints
+  static const String getAllProducts = '/products';
+  static const String getProductById = '/products';
+  static const String createProduct = '/products';
+  static const String updateProduct = '/products';
+  static const String deleteProduct = '/products';
+
+  // Category Endpoints
+  static const String getAllCategories = '/categories';
+  static const String getCategoryById = '/categories';
+
+  // Donation Endpoints
+  static const String getDonationCenters = '/donations/centers';
+  static const String getDonations = '/donations';
+  static const String createDonation = '/donations';
+
+  // Chat Endpoints
+  static const String getChatMessages = '/chat/messages';
+  static const String sendChatMessage = '/chat/messages';
+  static const String getUserChats = '/chat/conversations';
+
+  // Notification Endpoints
+  static const String getNotifications = '/notifications';
+  static const String markNotificationAsRead = '/notifications/read';
+
+  // Search Endpoints
+  static const String searchProducts = '/search/products';
+
+  // Upload Endpoints
+  static const String uploadImage = '/upload/image';
+  static const String uploadDocument = '/upload/document';
+
+  // Timeouts
+  static const int connectTimeout = 15; // seconds
+  static const int receiveTimeout = 15; // seconds
+}
