@@ -44,28 +44,40 @@ class CategoryProductsView extends StatelessWidget {
                             ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: GridView.builder(
-                        itemCount: products.length,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 14,
-                              childAspectRatio: 0.67,
-                            ),
-                        itemBuilder: (context, index) {
-                          final product = products[index];
-                          return _ProductCard(
-                            product: product,
-                            categoryName: category.displayName,
-                          );
-                        },
+                    if (products.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Center(
+                          child: Text(
+                            'No items available',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                      )
+                    else
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: GridView.builder(
+                          itemCount: products.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 14,
+                                childAspectRatio: 0.58,
+                              ),
+                          itemBuilder: (context, index) {
+                            final product = products[index];
+                            return _ProductCard(
+                              product: product,
+                              categoryName:
+                                  product.categoryName ?? category.displayName,
+                            );
+                          },
+                        ),
                       ),
-                    ),
                     const SizedBox(height: 12),
                   ],
                 ),
@@ -197,7 +209,7 @@ class _ProductCard extends StatelessWidget {
                     ),
                   ),
                   const Icon(
-                    Icons.favorite_border,
+                    Icons.shopping_cart_outlined,
                     size: 20,
                     color: Color(0xFF8B5A3C),
                   ),
@@ -221,7 +233,7 @@ class _ProductCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      height: 24,
+                      height: 28,
                       alignment: Alignment.center,
                       color: ColorResources.primaryGreen,
                       child: Text(
@@ -234,27 +246,34 @@ class _ProductCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Container(
-                    height: 24,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    color: const Color(0xFFECECEC),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.account_circle_outlined,
-                          size: 14,
-                          color: Color(0xFF8B5A3C),
-                        ),
-                        const SizedBox(width: 2),
-                        Text(
-                          product.sellerLabel,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: const Color(0xFF8B5A3C),
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                      ],
+                  Expanded(
+                    child: Container(
+                      height: 28,
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      color: const Color(0xFFD9D9D9),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/msg_icon.png',
+                            width: 18,
+                            height: 18,
+                          ),
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: Text(
+                              'Seller',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

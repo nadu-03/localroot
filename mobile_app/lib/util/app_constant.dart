@@ -16,11 +16,11 @@ class AppConstant {
   static const String getUserById = '/users';
 
   // Product Endpoints
-  static const String getAllProducts = '/products';
-  static const String getProductById = '/products';
-  static const String createProduct = '/products';
-  static const String updateProduct = '/products';
-  static const String deleteProduct = '/products';
+  static const String getAllProducts = '/items';
+  static const String getProductById = '/items';
+  static const String createProduct = '/items';
+  static const String updateProduct = '/items';
+  static const String deleteProduct = '/items';
   static const String createItem = '/items';
 
   // Category Endpoints

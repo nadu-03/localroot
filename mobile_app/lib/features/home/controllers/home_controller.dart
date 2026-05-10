@@ -8,8 +8,10 @@ import '../views/category_products_view.dart';
 class HomeController extends GetxController {
   final selectedTabIndex = 0.obs;
   final isLoadingCategories = false.obs;
+  final isLoadingProducts = false.obs;
 
   final categories = <HomeCategory>[].obs;
+  final products = <HomeProduct>[].obs;
 
   static const List<String> _sampleCategoryImages = [
     'assets/images/clothes.png',
@@ -23,6 +25,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     loadCategories();
+    loadProducts();
   }
 
   Future<void> loadCategories() async {
@@ -87,115 +90,57 @@ class HomeController extends GetxController {
     return value.trim().toLowerCase().replaceAll(' ', '_');
   }
 
-  final products = const <HomeProduct>[
-    HomeProduct(
-      title: 'Brown corset blouse',
-      priceLkr: 1000,
-      sellerLabel: 'Seller',
-      imagePath: 'assets/images/clothe_1.png',
-    ),
-    HomeProduct(
-      title: 'Little women Book',
-      priceLkr: 750,
-      sellerLabel: 'Seller',
-      imagePath: 'assets/images/clothe_2.png',
-    ),
-    HomeProduct(
-      title: 'Vintage desk lamp',
-      priceLkr: 2200,
-      sellerLabel: 'Seller',
-      imagePath: 'assets/images/clothe_1.png',
-    ),
-    HomeProduct(
-      title: 'Handmade wall decor',
-      priceLkr: 1450,
-      sellerLabel: 'Seller',
-      imagePath: 'assets/images/clothe_2.png',
-    ),
-  ];
+  Future<void> loadProducts() async {
+    isLoadingProducts.value = true;
+    try {
+      final response = await ApiManager.instance.get(
+        AppConstant.getAllProducts,
+        queryParameters: const {'status': 'unsold'},
+      );
+      final responseData = response.data;
+      final rawProducts = responseData is Map && responseData['data'] != null
+          ? responseData['data']
+          : responseData;
 
-  final categoryProducts = const <String, List<HomeProduct>>{
-    'clothes': [
-      HomeProduct(
-        title: 'Blue checked Blouse',
-        priceLkr: 800,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/clothe_1.png',
-      ),
-      HomeProduct(
-        title: 'Printed skirt',
-        priceLkr: 790,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/clothe_2.png',
-      ),
-      HomeProduct(
-        title: 'Men\'s Tshirt',
-        priceLkr: 900,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/clothe_1.png',
-      ),
-      HomeProduct(
-        title: 'Brown Blouse',
-        priceLkr: 750,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/clothe_2.png',
-      ),
-      HomeProduct(
-        title: 'Brown Blouse',
-        priceLkr: 750,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/clothe_2.png',
-      ),
-      HomeProduct(
-        title: 'Brown Blouse',
-        priceLkr: 750,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/clothe_2.png',
-      ),
-    ],
-    'books': [
-      HomeProduct(
-        title: 'Little Women',
-        priceLkr: 650,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/books.png',
-      ),
-    ],
-    'furniture': [
-      HomeProduct(
-        title: 'Wooden Chair',
-        priceLkr: 2500,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/furniture.png',
-      ),
-    ],
-    'decos': [
-      HomeProduct(
-        title: 'Wall Decor',
-        priceLkr: 1200,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/decos.png',
-      ),
-    ],
-    'others': [
-      HomeProduct(
-        title: 'Mixed Item',
-        priceLkr: 500,
-        sellerLabel: 'Seller',
-        imagePath: 'assets/images/logo.png',
-      ),
-    ],
-  };
+      final loadedProducts = <HomeProduct>[];
+      if (rawProducts is List) {
+        for (final entry in rawProducts) {
+          if (entry is Map) {
+            final product = HomeProduct.fromJson(entry);
+            if (product.title.isNotEmpty) {
+              loadedProducts.add(product);
+            }
+          }
+        }
+      }
+
+      products.assignAll(loadedProducts);
+    } on ApiException catch (e) {
+      Get.snackbar('Items', e.message, snackPosition: SnackPosition.TOP);
+    } catch (_) {
+      Get.snackbar(
+        'Items',
+        'Failed to load items',
+        snackPosition: SnackPosition.TOP,
+      );
+    } finally {
+      isLoadingProducts.value = false;
+    }
+  }
 
   void setTab(int index) {
     selectedTabIndex.value = index;
   }
 
   void openCategory(HomeCategory category) {
+    final filteredProducts = products
+        .where((product) => product.categoryId == category.id)
+        .toList();
+
     Get.to(
       () => CategoryProductsView(
         category: category,
-        products: categoryProducts[category.key] ?? products,
+        products: filteredProducts,
       ),
     );
   }
@@ -216,15 +161,61 @@ class HomeCategory {
 }
 
 class HomeProduct {
+  final int id;
+  final int? categoryId;
+  final String? categoryName;
   final String title;
   final int priceLkr;
   final String sellerLabel;
   final String imagePath;
+  final String description;
 
   const HomeProduct({
+    this.id = 0,
+    this.categoryId,
+    this.categoryName,
     required this.title,
     required this.priceLkr,
     required this.sellerLabel,
     required this.imagePath,
+    this.description = '',
   });
+
+  factory HomeProduct.fromJson(Map<dynamic, dynamic> json) {
+    final id = int.tryParse(
+          (json['item_id'] ?? json['id'])?.toString() ?? '',
+        ) ??
+        0;
+    final category = json['category'];
+    final seller = json['seller'];
+    final categoryIdValue = json['category_id'] ??
+        (category is Map ? category['category_id'] ?? category['id'] : null);
+    final categoryId = int.tryParse(
+      categoryIdValue?.toString() ?? '',
+    );
+    final categoryName = category is Map
+        ? (category['name'] ?? category['title'] ?? category['category_name'])
+            ?.toString()
+        : null;
+    final sellerLabel = seller is Map
+        ? (seller['username'] ?? seller['name'] ?? seller['email'])
+                ?.toString() ??
+            'Seller'
+        : 'Seller';
+    final image = json['image']?.toString();
+    final price = double.tryParse(json['price']?.toString() ?? '0') ?? 0;
+
+    return HomeProduct(
+      id: id,
+      categoryId: categoryId,
+      categoryName: categoryName,
+      title: json['title']?.toString() ?? '',
+      priceLkr: price.round(),
+      sellerLabel: sellerLabel,
+      imagePath: image != null && image.isNotEmpty
+          ? image
+          : 'assets/images/logo.png',
+      description: json['description']?.toString() ?? '',
+    );
+  }
 }

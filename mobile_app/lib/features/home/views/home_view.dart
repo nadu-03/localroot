@@ -28,15 +28,25 @@ class HomeView extends GetView<HomeController> {
           children: [
             _buildTopHeader(context),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildCampaignBanner(context),
-                    _buildCategories(context),
-                    _buildProductsGrid(context),
-                    const SizedBox(height: 8),
-                  ],
+              child: RefreshIndicator(
+                color: ColorResources.primaryGreen,
+                onRefresh: () async {
+                  await Future.wait([
+                    controller.loadCategories(),
+                    controller.loadProducts(),
+                  ]);
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildCampaignBanner(context),
+                      _buildCategories(context),
+                      _buildProductsGrid(context),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -288,7 +298,7 @@ class HomeView extends GetView<HomeController> {
             if (controller.isLoadingCategories.value) {
               return const SizedBox(
                 height: 86,
-                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                child: _CategoryShimmerList(),
               );
             }
 
@@ -361,148 +371,179 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _buildProductsGrid(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
-      child: GridView.builder(
-        itemCount: controller.products.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 0.66,
-        ),
-        itemBuilder: (context, index) {
-          final product = controller.products[index];
-          return GestureDetector(
-            onTap: () => Get.to(
-              () =>
-                  ProductDetailView(categoryName: 'Clothes', product: product),
+    return Obx(() {
+      if (controller.isLoadingProducts.value) {
+        return const _ProductGridShimmer();
+      }
+
+      if (controller.products.isEmpty) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(14, 40, 14, 0),
+          child: Center(
+            child: Text(
+              'No items available',
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: const Color(0xFFB8B8B8)),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x22000000),
-                    offset: Offset(1, 2),
-                    blurRadius: 2,
-                  ),
-                ],
+          ),
+        );
+      }
+
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+        child: GridView.builder(
+          itemCount: controller.products.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.58,
+          ),
+          itemBuilder: (context, index) {
+            final product = controller.products[index];
+            return GestureDetector(
+              onTap: () => Get.to(
+                () => ProductDetailView(
+                  categoryName: product.categoryName ?? 'Item',
+                  product: product,
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Color(0xFFECECEC), Color(0xFFDCDCDC)],
-                        ),
-                        border: Border.all(color: const Color(0xFFCECECE)),
-                      ),
-                      alignment: Alignment.center,
-                      child: _buildAssetImage(
-                        product.imagePath,
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: const Color(0xFFB8B8B8)),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x22000000),
+                      offset: Offset(1, 2),
+                      blurRadius: 2,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 4, 8, 2),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            product.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Color(0xFFECECEC), Color(0xFFDCDCDC)],
                           ),
+                          border: Border.all(color: const Color(0xFFCECECE)),
                         ),
-                        const Icon(
-                          Icons.favorite_border,
-                          size: 20,
-                          color: Color(0xFF8B5A3C),
+                        alignment: Alignment.center,
+                        child: _buildAssetImage(
+                          product.imagePath,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(
-                      '${product.priceLkr} LKR',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 24,
-                            alignment: Alignment.center,
-                            color: ColorResources.primaryGreen,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 4, 8, 2),
+                      child: Row(
+                        children: [
+                          Expanded(
                             child: Text(
-                              'Buy now',
-                              style: Theme.of(context).textTheme.bodySmall
+                              product.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w600,
                                   ),
                             ),
                           ),
+                          const Icon(
+                            Icons.shopping_cart_outlined,
+                            size: 20,
+                            color: Color(0xFF8B5A3C),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        '${product.priceLkr} LKR',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
                         ),
-                        const SizedBox(width: 4),
-                        Container(
-                          height: 24,
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          color: const Color(0xFFECECEC),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.account_circle_outlined,
-                                size: 14,
-                                color: Color(0xFF8B5A3C),
-                              ),
-                              const SizedBox(width: 2),
-                              Text(
-                                product.sellerLabel,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 28,
+                              alignment: Alignment.center,
+                              color: ColorResources.primaryGreen,
+                              child: Text(
+                                'Buy now',
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
-                                      color: Color(0xFF8B5A3C),
+                                      color: Colors.black,
                                       fontWeight: FontWeight.w600,
                                     ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Container(
+                              height: 28,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                              ),
+                              color: const Color(0xFFD9D9D9),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/msg_icon.png',
+                                    width: 18,
+                                    height: 18,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Flexible(
+                                    child: Text(
+                                      'Seller',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      ),
-    );
+            );
+          },
+        ),
+      );
+    });
   }
 
   Widget _buildAssetImage(
@@ -616,5 +657,162 @@ class HomeView extends GetView<HomeController> {
         size: 24,
       );
     }
+  }
+}
+
+class _CategoryShimmerList extends StatelessWidget {
+  const _CategoryShimmerList();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: 5,
+      separatorBuilder: (_, _) => const SizedBox(width: 12),
+      itemBuilder: (context, index) {
+        return const SizedBox(
+          width: 64,
+          child: Column(
+            children: [
+              _ShimmerBox(width: 52, height: 52, shape: BoxShape.circle),
+              SizedBox(height: 8),
+              _ShimmerBox(width: 50, height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ProductGridShimmer extends StatelessWidget {
+  const _ProductGridShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
+      child: GridView.builder(
+        itemCount: 4,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 0.58,
+        ),
+        itemBuilder: (context, index) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: const Color(0xFFB8B8B8)),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x22000000),
+                  offset: Offset(1, 2),
+                  blurRadius: 2,
+                ),
+              ],
+            ),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(4),
+                    child: _ShimmerBox(width: double.infinity, height: 160),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8, 4, 8, 0),
+                  child: _ShimmerBox(width: double.infinity, height: 14),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8, 6, 70, 0),
+                  child: _ShimmerBox(width: double.infinity, height: 12),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  child: Row(
+                    children: [
+                      Expanded(child: _ShimmerBox(width: 60, height: 28)),
+                      SizedBox(width: 4),
+                      Expanded(child: _ShimmerBox(width: 60, height: 28)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ShimmerBox extends StatefulWidget {
+  final double width;
+  final double height;
+  final BoxShape shape;
+
+  const _ShimmerBox({
+    required this.width,
+    required this.height,
+    this.shape = BoxShape.rectangle,
+  });
+
+  @override
+  State<_ShimmerBox> createState() => _ShimmerBoxState();
+}
+
+class _ShimmerBoxState extends State<_ShimmerBox>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1100),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final shimmerPosition = (_controller.value * 2) - 1;
+        return Container(
+          width: widget.width,
+          height: widget.height,
+          decoration: BoxDecoration(
+            shape: widget.shape,
+            borderRadius: widget.shape == BoxShape.circle
+                ? null
+                : BorderRadius.circular(4),
+            gradient: LinearGradient(
+              begin: Alignment(-1 + shimmerPosition, 0),
+              end: Alignment(1 + shimmerPosition, 0),
+              colors: const [
+                Color(0xFFE2E2E2),
+                Color(0xFFF3F3F3),
+                Color(0xFFE2E2E2),
+              ],
+              stops: const [0.25, 0.5, 0.75],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
