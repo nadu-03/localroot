@@ -44,7 +44,7 @@ const Item = sequelize.define('Item', {
     type: DataTypes.STRING(50),
     defaultValue: 'active',
     validate: {
-      isIn: [['active', 'inactive', 'sold']],
+      isIn: [['active', 'pending', 'inactive', 'sold']],
     },
   },
 }, {

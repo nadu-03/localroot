@@ -7,6 +7,7 @@ const donationController = require('../controllers/donationController');
 const chatbotController = require('../controllers/chatbotController');
 const messageController = require('../controllers/messageController');
 const charityController = require('../controllers/charityController');
+const { verifyToken } = require('../middleware/auth');
 const authRoutes = require('./auth');
 const categoriesRoutes = require('./categories');
 // note: `single` already imported above
@@ -25,6 +26,7 @@ router.put('/users/:id', singleMemory('image'), userController.update);
 router.delete('/users/:id', userController.remove);
 
 router.get('/items', itemController.list);
+router.get('/items/my-listings', verifyToken, itemController.listMyListings);
 router.get('/items/seller/:sellerId', itemController.listBySeller);
 router.get('/items/stats', itemController.stats);
 router.get('/items/:id', itemController.get);

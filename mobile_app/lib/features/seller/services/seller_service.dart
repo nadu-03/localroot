@@ -51,6 +51,37 @@ class SellerService {
     }
   }
 
+  Future<List<SellerListingItemData>> fetchSellerListings(int sellerId) async {
+    try {
+      final response = await ApiManager.instance.get(
+        '${AppConstant.getAllProducts}/seller/$sellerId',
+      );
+
+      final responseData = response.data;
+      final rawItems = responseData is Map && responseData['data'] != null
+          ? responseData['data']
+          : responseData;
+
+      final items = <SellerListingItemData>[];
+      if (rawItems is List) {
+        for (final item in rawItems) {
+          if (item is Map) {
+            final listingItem = SellerListingItemData.fromJson(item);
+            if (listingItem.title.isNotEmpty) {
+              items.add(listingItem);
+            }
+          }
+        }
+      }
+
+      return items;
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Failed to fetch seller listings: $e');
+    }
+  }
+
   // Create a new item with optional image
   Future<ItemCreateResponse> createItem({
     required int sellerId,
@@ -176,5 +207,47 @@ class CategoryData {
 
   factory CategoryData.fromJson(Map<String, dynamic> json) {
     return CategoryData(id: json['id'] ?? 0, name: json['name'] ?? '');
+  }
+}
+
+class SellerListingItemData {
+  final int id;
+  final String title;
+  final String category;
+  final double price;
+  final String? image;
+  final String status;
+
+  const SellerListingItemData({
+    required this.id,
+    required this.title,
+    required this.category,
+    required this.price,
+    this.image,
+    required this.status,
+  });
+
+  factory SellerListingItemData.fromJson(Map<dynamic, dynamic> json) {
+    final category = json['category'];
+    final categoryName = category is Map
+        ? (category['name'] ?? category['title'] ?? category['category_name'])
+              ?.toString()
+        : (json['category'] ?? json['category_name'])?.toString();
+    final price = double.tryParse(json['price']?.toString() ?? '0') ?? 0;
+
+    return SellerListingItemData(
+      id:
+          int.tryParse(
+            (json['item_id'] ?? json['id'])?.toString() ?? '',
+          ) ??
+          0,
+      title: json['title']?.toString() ?? '',
+      category: categoryName == null || categoryName.isEmpty
+          ? 'Uncategorized'
+          : categoryName,
+      price: price,
+      image: json['image']?.toString(),
+      status: (json['status'] ?? 'active').toString().toLowerCase(),
+    );
   }
 }

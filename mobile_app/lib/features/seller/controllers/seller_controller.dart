@@ -12,6 +12,8 @@ class SellerController extends GetxController {
   // Listing data models
   final soldItems = <SellerListingItem>[].obs;
   final unsoldItems = <SellerListingItem>[].obs;
+  final isLoadingListings = false.obs;
+  final listingError = Rx<String?>(null);
 
   // Add item form states
   final categories = <CategoryData>[].obs;
@@ -22,8 +24,64 @@ class SellerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initializeListings();
+    loadSellerListings();
     loadCategories();
+  }
+
+  Future<void> loadSellerListings() async {
+    try {
+      isLoadingListings.value = true;
+      listingError.value = null;
+
+      final userController = Get.find<UserController>();
+      if (userController.user.value == null) {
+        await userController.loadUserData();
+      }
+
+      final sellerId = userController.user.value?.userId;
+      if (sellerId == null) {
+        soldItems.clear();
+        unsoldItems.clear();
+        listingError.value = 'Seller account not found. Please log in again.';
+        return;
+      }
+
+      final listings = await _sellerService.fetchSellerListings(sellerId);
+      final sold = <SellerListingItem>[];
+      final unsold = <SellerListingItem>[];
+
+      for (final listing in listings) {
+        final item = SellerListingItem.fromData(listing);
+        if (listing.status == 'sold') {
+          sold.add(item);
+        } else {
+          unsold.add(item);
+        }
+      }
+
+      soldItems.assignAll(sold);
+      unsoldItems.assignAll(unsold);
+    } on ApiException catch (e) {
+      listingError.value = e.message;
+      Get.snackbar(
+        'Listings error',
+        e.message,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      listingError.value = 'Failed to load listings';
+      Get.snackbar(
+        'Listings error',
+        'Failed to load listings',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoadingListings.value = false;
+    }
   }
 
   /// Load categories from API
@@ -101,6 +159,7 @@ class SellerController extends GetxController {
         } catch (_) {}
 
         await Future<void>.delayed(const Duration(milliseconds: 250));
+        await loadSellerListings();
         Get.snackbar(
           'Item added successfully',
           'Successfully created: $itemTitle',
@@ -145,56 +204,6 @@ class SellerController extends GetxController {
     }
   }
 
-  void _initializeListings() {
-    soldItems.assignAll([
-      const SellerListingItem(
-        imagePath: 'assets/images/clothe_1.png',
-        title: 'Blue Checked Blouse',
-        category: 'Clothes',
-        price: '950 LKR',
-      ),
-      const SellerListingItem(
-        imagePath: 'assets/images/clothe_2.png',
-        title: 'Red ballet shoes',
-        category: 'Clothes',
-        price: '1500 LKR',
-      ),
-      const SellerListingItem(
-        imagePath: 'assets/images/books.png',
-        title: 'Motivational Book',
-        category: 'Books',
-        price: '870 LKR',
-      ),
-      const SellerListingItem(
-        imagePath: 'assets/images/furniture.png',
-        title: 'Miniature Wooden Decor',
-        category: 'Decos',
-        price: '1600 LKR',
-      ),
-    ]);
-
-    unsoldItems.assignAll([
-      const SellerListingItem(
-        imagePath: 'assets/images/clothe_2.png',
-        title: 'Printed Skirt',
-        category: 'Clothes',
-        price: '790 LKR',
-      ),
-      const SellerListingItem(
-        imagePath: 'assets/images/decos.png',
-        title: 'Wall Frame',
-        category: 'Decos',
-        price: '1250 LKR',
-      ),
-      const SellerListingItem(
-        imagePath: 'assets/images/books.png',
-        title: 'Novel Collection',
-        category: 'Books',
-        price: '560 LKR',
-      ),
-    ]);
-  }
-
   void selectListingTab(int index) {
     selectedListingTab.value = index;
   }
@@ -215,4 +224,15 @@ class SellerListingItem {
     required this.category,
     required this.price,
   });
+
+  factory SellerListingItem.fromData(SellerListingItemData data) {
+    return SellerListingItem(
+      imagePath: data.image == null || data.image!.isEmpty
+          ? 'assets/images/logo.png'
+          : data.image!,
+      title: data.title,
+      category: data.category,
+      price: '${data.price.round()} LKR',
+    );
+  }
 }

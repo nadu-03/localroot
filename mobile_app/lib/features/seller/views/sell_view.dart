@@ -42,7 +42,10 @@ class SellView extends StatelessWidget {
                     _buildActionButton(
                       icon: Icons.view_list_outlined,
                       title: 'View Listing',
-                      onTap: () => Get.to(() => const ViewListingView()),
+                      onTap: () => Get.to(
+                        () => const ViewListingView(),
+                        binding: SellerBinding(),
+                      ),
                     ),
                     const SizedBox(height: 10),
                     _buildActionButton(

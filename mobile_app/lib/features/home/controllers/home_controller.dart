@@ -223,8 +223,8 @@ class HomeProduct {
     );
     final categoryName = category is Map
         ? (category['name'] ?? category['title'] ?? category['category_name'])
-            ?.toString()
-        : null;
+              ?.toString()
+        : json['category_name']?.toString();
     final sellerLabel = seller is Map
         ? (seller['username'] ?? seller['name'] ?? seller['email'])
                 ?.toString() ??
