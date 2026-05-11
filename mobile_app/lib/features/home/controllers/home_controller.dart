@@ -9,9 +9,11 @@ class HomeController extends GetxController {
   final selectedTabIndex = 0.obs;
   final isLoadingCategories = false.obs;
   final isLoadingProducts = false.obs;
+  final searchQuery = ''.obs;
 
   final categories = <HomeCategory>[].obs;
   final products = <HomeProduct>[].obs;
+  Worker? _searchWorker;
 
   static const List<String> _sampleCategoryImages = [
     'assets/images/clothes.png',
@@ -24,8 +26,19 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _searchWorker = debounce<String>(
+      searchQuery,
+      (_) => loadProducts(),
+      time: const Duration(milliseconds: 450),
+    );
     loadCategories();
     loadProducts();
+  }
+
+  @override
+  void onClose() {
+    _searchWorker?.dispose();
+    super.onClose();
   }
 
   Future<void> loadCategories() async {
@@ -93,9 +106,15 @@ class HomeController extends GetxController {
   Future<void> loadProducts() async {
     isLoadingProducts.value = true;
     try {
+      final query = searchQuery.value.trim();
+      final queryParameters = <String, dynamic>{'status': 'unsold'};
+      if (query.isNotEmpty) {
+        queryParameters['q'] = query;
+      }
+
       final response = await ApiManager.instance.get(
         AppConstant.getAllProducts,
-        queryParameters: const {'status': 'unsold'},
+        queryParameters: queryParameters,
       );
       final responseData = response.data;
       final rawProducts = responseData is Map && responseData['data'] != null
@@ -126,6 +145,15 @@ class HomeController extends GetxController {
     } finally {
       isLoadingProducts.value = false;
     }
+  }
+
+  void searchItems(String value) {
+    searchQuery.value = value;
+  }
+
+  void clearSearch() {
+    if (searchQuery.value.isEmpty) return;
+    searchQuery.value = '';
   }
 
   void setTab(int index) {

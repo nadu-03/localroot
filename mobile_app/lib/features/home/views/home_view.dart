@@ -15,8 +15,29 @@ import 'drawer_info_views.dart';
 import 'notification_view.dart';
 import 'product_detail_view.dart';
 
-class HomeView extends GetView<HomeController> {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final _searchTextController = TextEditingController();
+
+  HomeController get controller => Get.find<HomeController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _searchTextController.text = controller.searchQuery.value;
+  }
+
+  @override
+  void dispose() {
+    _searchTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,22 +143,62 @@ class HomeView extends GetView<HomeController> {
           const SizedBox(height: 14),
           Container(
             height: 38,
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+            padding: const EdgeInsets.fromLTRB(14, 0, 10, 0),
             decoration: BoxDecoration(
-              color: const Color(0xFFD9D9D9),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
               children: [
-                Text(
-                  'Find items',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF8E8E8E),
-                    fontWeight: FontWeight.w500,
+                Expanded(
+                  child: TextField(
+                    controller: _searchTextController,
+                    onChanged: controller.searchItems,
+                    onSubmitted: (_) => controller.loadProducts(),
+                    textInputAction: TextInputAction.search,
+                    decoration: InputDecoration(
+                      hintText: 'Find items',
+                      hintStyle: Theme.of(context).textTheme.bodyMedium
+                          ?.copyWith(
+                            color: const Color(0xFF9A9A9A),
+                            fontWeight: FontWeight.w500,
+                          ),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      isDense: true,
+                      filled: false,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 9,
+                      ),
+                    ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-                const Spacer(),
-                const Icon(Icons.search, color: Colors.black54, size: 20),
+                Obx(
+                  () => controller.searchQuery.value.isNotEmpty
+                      ? IconButton(
+                          onPressed: () {
+                            _searchTextController.clear();
+                            controller.clearSearch();
+                          },
+                          icon: const Icon(Icons.close, size: 18),
+                          visualDensity: VisualDensity.compact,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(
+                            minWidth: 28,
+                            minHeight: 28,
+                          ),
+                        )
+                      : const Icon(
+                          Icons.search,
+                          color: Colors.black54,
+                          size: 20,
+                        ),
+                ),
               ],
             ),
           ),
@@ -380,9 +441,13 @@ class HomeView extends GetView<HomeController> {
         return Padding(
           padding: const EdgeInsets.fromLTRB(14, 40, 14, 0),
           child: Center(
-            child: Text(
-              'No items available',
-              style: Theme.of(context).textTheme.bodyMedium,
+            child: Obx(
+              () => Text(
+                controller.searchQuery.value.trim().isEmpty
+                    ? 'No items available'
+                    : 'No items found',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             ),
           ),
         );
