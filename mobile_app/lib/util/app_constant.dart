@@ -9,6 +9,9 @@ class AppConstant {
   static const String authSignUp = '/auth/signup';
   static const String authLogout = '/auth/logout';
   static const String authRefresh = '/auth/refresh';
+  static const String authForgotPassword = '/auth/forgot-password';
+  static const String authVerifyOtp = '/auth/verify-otp';
+  static const String authResetPassword = '/auth/reset-password';
 
   // User Endpoints
   static const String getUserProfile = '/users/profile';

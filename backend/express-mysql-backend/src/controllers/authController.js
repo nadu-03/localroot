@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { User } = require('../models');
-const { generateToken } = require('../middleware/auth');
+const { generateToken, JWT_SECRET } = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
 
 exports.signup = async (req, res, next) => {
   try {
@@ -130,6 +131,43 @@ exports.verifyOtp = async (req, res, next) => {
     const result = await verifyOtp(email, code);
     if (!result) return res.status(400).json({ success: false, code: 400, message: 'OTP invalid or expired', data: null });
     return res.status(200).json({ success: true, code: 200, message: 'OTP verified', data: result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const { resetToken, password } = req.body;
+
+    if (!resetToken || !password) {
+      return res.status(400).json({ success: false, code: 400, message: 'Reset token and password are required', data: null });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, code: 400, message: 'Password must be at least 6 characters', data: null });
+    }
+
+    let payload;
+    try {
+      payload = jwt.verify(resetToken, JWT_SECRET);
+    } catch (err) {
+      return res.status(401).json({ success: false, code: 401, message: 'Reset token invalid or expired', data: null });
+    }
+
+    if (!payload || payload.purpose !== 'reset' || !payload.email) {
+      return res.status(401).json({ success: false, code: 401, message: 'Reset token invalid or expired', data: null });
+    }
+
+    const user = await User.findOne({ where: { email: payload.email } });
+    if (!user) {
+      return res.status(404).json({ success: false, code: 404, message: 'User not found', data: null });
+    }
+
+    user.password_hash = await bcrypt.hash(password, 10);
+    await user.save();
+
+    return res.status(200).json({ success: true, code: 200, message: 'Password reset successfully', data: null });
   } catch (err) {
     next(err);
   }

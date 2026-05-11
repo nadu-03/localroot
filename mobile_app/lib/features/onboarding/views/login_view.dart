@@ -3,8 +3,16 @@ import 'package:get/get.dart';
 import '../../../util/color_resources.dart';
 import '../controllers/login_controller.dart';
 
-class LoginView extends GetView<LoginController> {
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final _formKey = GlobalKey<FormState>();
+  final LoginController controller = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +52,7 @@ class LoginView extends GetView<LoginController> {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(24, 18, 24, 20),
                   child: Form(
-                    key: controller.formKey,
+                    key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -164,7 +172,11 @@ class LoginView extends GetView<LoginController> {
                         SizedBox(
                           height: 44,
                           child: ElevatedButton(
-                            onPressed: controller.login,
+                            onPressed: () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                controller.login();
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: ColorResources.primaryGreen,
                               shape: RoundedRectangleBorder(

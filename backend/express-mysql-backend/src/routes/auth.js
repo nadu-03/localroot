@@ -9,6 +9,7 @@ router.post('/signin', authController.signin);
 router.post('/google', authController.googleAuth);
 router.post('/forgot-password', authController.forgotPassword);
 router.post('/verify-otp', authController.verifyOtp);
+router.post('/reset-password', authController.resetPassword);
 
 // Protected routes
 router.get('/profile', verifyToken, authController.getProfile);
