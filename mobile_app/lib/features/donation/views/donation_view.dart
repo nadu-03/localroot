@@ -31,7 +31,7 @@ class DonationView extends StatelessWidget {
                     _buildActionButton(
                       context,
                       icon: Icons.add_box_outlined,
-                      title: 'Add Item',
+                      title: 'Add Donation Item',
                       onTap: () => Get.to(
                         () => const AddNewItemView(),
                         binding: SellerBinding(),
