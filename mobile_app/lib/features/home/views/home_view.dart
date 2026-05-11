@@ -10,6 +10,7 @@ import '../../../util/app_routes.dart';
 import '../../../util/color_resources.dart';
 import '../../../data/api/api_manager.dart';
 import '../../../common/controllers/user_controller.dart';
+import '../../../common/widgets/user_profile_avatar.dart';
 import '../controllers/home_controller.dart';
 import 'drawer_info_views.dart';
 import 'notification_view.dart';
@@ -86,22 +87,9 @@ class _HomeViewState extends State<HomeView> {
         children: [
           Row(
             children: [
-              InkWell(
+              UserProfileAvatar(
                 onTap: () => Get.find<AppMenuController>().changeNavBar(3),
-                borderRadius: BorderRadius.circular(17),
-                child: Container(
-                  width: 34,
-                  height: 34,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: const Icon(
-                    Icons.person,
-                    color: Colors.black,
-                    size: 24,
-                  ),
-                ),
+                radius: 17,
               ),
               const SizedBox(width: 10),
               Obx(

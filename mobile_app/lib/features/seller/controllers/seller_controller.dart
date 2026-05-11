@@ -94,26 +94,21 @@ class SellerController extends GetxController {
 
       if (response.success && response.data != null) {
         final itemTitle = response.data!.title;
+
+        Get.back();
+        try {
+          Get.find<AppMenuController>().changeNavBar(1);
+        } catch (_) {}
+
+        await Future<void>.delayed(const Duration(milliseconds: 250));
         Get.snackbar(
-          'Success',
+          'Item added successfully',
           'Successfully created: $itemTitle',
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.green,
           colorText: Colors.white,
           duration: const Duration(seconds: 3),
         );
-
-        // Close the add item view and navigate to the seller screen
-        if (Get.isOverlaysOpen) {
-          // ensure snack shows on root overlay; close current route first
-          Get.back();
-        } else {
-          Get.back();
-        }
-        // Switch main nav to Sell tab (index 1)
-        try {
-          Get.find<AppMenuController>().changeNavBar(1);
-        } catch (_) {}
 
         return true;
       } else {

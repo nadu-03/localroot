@@ -26,18 +26,24 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      userId: json['user_id'],
+      userId: int.tryParse(
+        (json['user_id'] ?? json['id'])?.toString() ?? '',
+      ),
       username: json['username'],
       email: json['email'],
       phone: json['phone'],
       location: json['location'],
       image: json['image'],
       deviceToken: json['device_token'],
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
+      createdAt: (json['createdAt'] ?? json['created_at']) != null
+          ? DateTime.tryParse(
+              (json['createdAt'] ?? json['created_at']).toString(),
+            )
           : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
+      updatedAt: (json['updatedAt'] ?? json['updated_at']) != null
+          ? DateTime.tryParse(
+              (json['updatedAt'] ?? json['updated_at']).toString(),
+            )
           : null,
     );
   }

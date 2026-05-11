@@ -5,6 +5,7 @@ import 'dart:convert';
 import '../../../util/app_constant.dart';
 import 'package:get/get.dart';
 import '../../../common/controllers/user_controller.dart';
+import '../../../common/widgets/user_profile_avatar.dart';
 
 import '../../../util/color_resources.dart';
 import '../controllers/home_controller.dart';
@@ -97,15 +98,7 @@ class CategoryProductsView extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 34,
-                height: 34,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: const Icon(Icons.person, color: Colors.black, size: 24),
-              ),
+              const UserProfileAvatar(radius: 17),
               const SizedBox(width: 10),
               Obx(() {
                 final userController = Get.find<UserController>();

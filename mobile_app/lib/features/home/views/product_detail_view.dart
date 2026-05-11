@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 import '../../../util/color_resources.dart';
 import '../../../common/controllers/user_controller.dart';
+import '../../../common/widgets/user_profile_avatar.dart';
 import '../controllers/home_controller.dart';
 
 class ProductDetailView extends StatelessWidget {
@@ -198,15 +199,7 @@ class ProductDetailView extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
       child: Row(
         children: [
-          Container(
-            width: 34,
-            height: 34,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-            child: const Icon(Icons.person, color: Colors.black, size: 24),
-          ),
+          const UserProfileAvatar(radius: 17),
           const SizedBox(width: 10),
           Obx(() {
             final userController = Get.find<UserController>();

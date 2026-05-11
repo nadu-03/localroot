@@ -15,7 +15,7 @@ class AppConstant {
 
   // User Endpoints
   static const String getUserProfile = '/users/profile';
-  static const String updateUserProfile = '/users/profile';
+  static const String updateUserProfile = '/users';
   static const String getUserById = '/users';
 
   // Product Endpoints
