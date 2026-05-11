@@ -6,6 +6,7 @@ import '../../../common/widgets/user_profile_avatar.dart';
 import '../../menu/controllers/menu_controller.dart';
 import '../../../util/color_resources.dart';
 import '../../../features/home/views/ai_chat_bot_view.dart';
+import '../bindings/donation_binding.dart';
 import '../views/donation_centers_view.dart';
 import '../../seller/views/add_new_item_view.dart';
 import '../../seller/bindings/seller_binding.dart';
@@ -49,7 +50,10 @@ class DonationView extends StatelessWidget {
                       context,
                       icon: Icons.location_on_outlined,
                       title: 'See Donation Centers',
-                      onTap: () => Get.to(() => const DonationCentersView()),
+                      onTap: () => Get.to(
+                        () => const DonationCentersView(),
+                        binding: DonationBinding(),
+                      ),
                     ),
                   ],
                 ),

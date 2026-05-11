@@ -31,13 +31,13 @@ class AppConstant {
   static const String getCategoryById = '/categories';
 
   // Donation Endpoints
-  static const String getDonationCenters = '/donations/centers';
+  static const String getDonationCenters = '/charities';
   static const String getDonations = '/donations';
   static const String createDonation = '/donations';
 
   // Chat Endpoints
-  static const String getChatMessages = '/chat/messages';
-  static const String sendChatMessage = '/chat/messages';
+  static const String getChatMessages = '/messages';
+  static const String sendChatMessage = '/messages';
   static const String getUserChats = '/chat/conversations';
 
   // Notification Endpoints
