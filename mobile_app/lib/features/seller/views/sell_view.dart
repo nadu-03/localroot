@@ -50,6 +50,7 @@ class SellView extends StatelessWidget {
                     const SizedBox(height: 10),
                     _buildActionButton(
                       icon: Icons.forum_outlined,
+                      imagePath: 'assets/images/msg_white_icon.png',
                       title: 'User Chat',
                       onTap: () => Get.to(() => const UserChatView()),
                     ),
@@ -203,6 +204,7 @@ class SellView extends StatelessWidget {
   Widget _buildActionButton({
     required IconData icon,
     required String title,
+    String? imagePath,
     VoidCallback? onTap,
   }) {
     return InkWell(
@@ -227,15 +229,20 @@ class SellView extends StatelessWidget {
           children: [
             const SizedBox(width: 18),
             Container(
-              width: 34,
-              height: 34,
+              width: 42,
+              height: 42,
               decoration: BoxDecoration(
                 color: const Color(0xFF6D4C41),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Icon(icon, color: Colors.white, size: 19),
+              child: imagePath == null
+                  ? Icon(icon, color: Colors.white, size: 26)
+                  : Padding(
+                      padding: const EdgeInsets.all(7),
+                      child: Image.asset(imagePath, fit: BoxFit.contain),
+                    ),
             ),
-            const SizedBox(width: 44),
+            const SizedBox(width: 36),
             Text(
               title,
               style: const TextStyle(
