@@ -8,7 +8,7 @@ import '../../../util/color_resources.dart';
 import '../../seller/views/add_new_item_view.dart';
 import '../../seller/bindings/seller_binding.dart';
 import 'view_listing_view.dart';
-import 'user_chat_view.dart';
+import 'user_chat_list_view.dart';
 
 class SellView extends StatelessWidget {
   const SellView({super.key});
@@ -48,7 +48,14 @@ class SellView extends StatelessWidget {
                     _buildActionButton(
                       icon: Icons.forum_outlined,
                       title: 'User Chat',
-                      onTap: () => Get.to(() => const UserChatView()),
+                      onTap: () => Get.to(
+                        () => const UserChatListView(
+                          mode: ChatListMode.seller,
+                          title: 'User Chats',
+                          participantRole: 'User',
+                          emptyMessage: 'No buyer messages yet',
+                        ),
+                      ),
                     ),
                   ],
                 ),
