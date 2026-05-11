@@ -9,6 +9,7 @@ import '../../../util/color_resources.dart';
 import '../../../common/controllers/user_controller.dart';
 import '../../../common/widgets/user_profile_avatar.dart';
 import '../controllers/home_controller.dart';
+import 'user_chat_view.dart';
 
 class ProductDetailView extends StatelessWidget {
   final String categoryName;
@@ -134,7 +135,8 @@ class ProductDetailView extends StatelessWidget {
                 child: SizedBox(
                   height: 42,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () =>
+                        Get.find<HomeController>().addToCart(product),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorResources.primaryGreen,
                       shape: RoundedRectangleBorder(
@@ -156,7 +158,7 @@ class ProductDetailView extends StatelessWidget {
                 child: SizedBox(
                   height: 42,
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () => _openSellerChat(context),
                     style: OutlinedButton.styleFrom(
                       backgroundColor: const Color(0xFFD9D9D9),
                       side: BorderSide.none,
@@ -189,6 +191,39 @@ class ProductDetailView extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _openSellerChat(BuildContext context) {
+    final sellerId = product.sellerId;
+    if (sellerId == null || sellerId == 0) {
+      Get.snackbar(
+        'Seller chat',
+        'Seller details are not available for this item.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    final buyerId = Get.find<UserController>().user.value?.userId;
+    if (buyerId == sellerId) {
+      Get.snackbar(
+        'Seller chat',
+        'This is your own item.',
+        snackPosition: SnackPosition.TOP,
+      );
+      return;
+    }
+
+    Get.to(
+      () => UserChatView(
+        sellerId: sellerId,
+        sellerName: product.sellerLabel,
+        itemId: product.id == 0 ? null : product.id,
+        itemTitle: product.title,
       ),
     );
   }

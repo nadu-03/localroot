@@ -13,6 +13,7 @@ class HomeController extends GetxController {
 
   final categories = <HomeCategory>[].obs;
   final products = <HomeProduct>[].obs;
+  final cartItems = <HomeProduct>[].obs;
   Worker? _searchWorker;
 
   static const List<String> _sampleCategoryImages = [
@@ -172,6 +173,25 @@ class HomeController extends GetxController {
       ),
     );
   }
+
+  void addToCart(HomeProduct product) {
+    if (product.id != 0 &&
+        cartItems.any((cartItem) => cartItem.id == product.id)) {
+      Get.snackbar(
+        'Cart',
+        '${product.title} is already in your cart.',
+        snackPosition: SnackPosition.TOP,
+      );
+      return;
+    }
+
+    cartItems.add(product);
+    Get.snackbar(
+      'Cart',
+      '${product.title} added to cart.',
+      snackPosition: SnackPosition.TOP,
+    );
+  }
 }
 
 class HomeCategory {
@@ -194,6 +214,7 @@ class HomeProduct {
   final String? categoryName;
   final String title;
   final int priceLkr;
+  final int? sellerId;
   final String sellerLabel;
   final String imagePath;
   final String description;
@@ -202,6 +223,7 @@ class HomeProduct {
     this.id = 0,
     this.categoryId,
     this.categoryName,
+    this.sellerId,
     required this.title,
     required this.priceLkr,
     required this.sellerLabel,
@@ -230,6 +252,10 @@ class HomeProduct {
                 ?.toString() ??
             'Seller'
         : 'Seller';
+    final sellerId = int.tryParse(
+      (json['seller_id'] ?? _sellerIdFromJson(seller))?.toString() ??
+          '',
+    );
     final image = json['image']?.toString();
     final price = double.tryParse(json['price']?.toString() ?? '0') ?? 0;
 
@@ -237,6 +263,7 @@ class HomeProduct {
       id: id,
       categoryId: categoryId,
       categoryName: categoryName,
+      sellerId: sellerId,
       title: json['title']?.toString() ?? '',
       priceLkr: price.round(),
       sellerLabel: sellerLabel,
@@ -245,5 +272,10 @@ class HomeProduct {
           : 'assets/images/logo.png',
       description: json['description']?.toString() ?? '',
     );
+  }
+
+  static dynamic _sellerIdFromJson(dynamic seller) {
+    if (seller is! Map) return null;
+    return seller['user_id'] ?? seller['id'];
   }
 }

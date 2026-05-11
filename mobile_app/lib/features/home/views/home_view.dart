@@ -15,6 +15,8 @@ import '../controllers/home_controller.dart';
 import 'drawer_info_views.dart';
 import 'notification_view.dart';
 import 'product_detail_view.dart';
+import 'user_chat_list_view.dart';
+import 'user_chat_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -92,12 +94,16 @@ class _HomeViewState extends State<HomeView> {
                 radius: 17,
               ),
               const SizedBox(width: 10),
-              Obx(
-                () => Text(
-                  'Hi ${userController.user.value?.username ?? 'User'},',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
+              Flexible(
+                child: Obx(
+                  () => Text(
+                    'Hi ${userController.user.value?.username ?? 'User'},',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -109,6 +115,21 @@ class _HomeViewState extends State<HomeView> {
                   color: Colors.black,
                   size: 20,
                 ),
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+              ),
+              const SizedBox(width: 10),
+              IconButton(
+                onPressed: () => Get.to(
+                  () => const UserChatListView(
+                    mode: ChatListMode.buyer,
+                    title: 'Messages',
+                    participantRole: 'Seller',
+                    emptyMessage: 'No seller messages yet',
+                  ),
+                ),
+                icon: const Icon(Icons.message, color: Colors.black, size: 21),
                 visualDensity: VisualDensity.compact,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
@@ -156,9 +177,7 @@ class _HomeViewState extends State<HomeView> {
                       focusedBorder: InputBorder.none,
                       isDense: true,
                       filled: false,
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 9,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 9),
                     ),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.black,
@@ -345,10 +364,7 @@ class _HomeViewState extends State<HomeView> {
           const SizedBox(height: 10),
           Obx(() {
             if (controller.isLoadingCategories.value) {
-              return const SizedBox(
-                height: 86,
-                child: _CategoryShimmerList(),
-              );
+              return const SizedBox(height: 86, child: _CategoryShimmerList());
             }
 
             if (controller.categories.isEmpty) {
@@ -513,10 +529,16 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                             ),
                           ),
-                          const Icon(
-                            Icons.shopping_cart_outlined,
-                            size: 20,
-                            color: Color(0xFF8B5A3C),
+                          InkWell(
+                            onTap: () => controller.addToCart(product),
+                            child: const Padding(
+                              padding: EdgeInsets.all(2),
+                              child: Icon(
+                                Icons.shopping_cart_outlined,
+                                size: 20,
+                                color: Color(0xFF8B5A3C),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -537,52 +559,58 @@ class _HomeViewState extends State<HomeView> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              height: 28,
-                              alignment: Alignment.center,
-                              color: ColorResources.primaryGreen,
-                              child: Text(
-                                'Buy now',
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                            child: InkWell(
+                              onTap: () => controller.addToCart(product),
+                              child: Container(
+                                height: 28,
+                                alignment: Alignment.center,
+                                color: ColorResources.primaryGreen,
+                                child: Text(
+                                  'Buy now',
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
                               ),
                             ),
                           ),
                           const SizedBox(width: 4),
                           Expanded(
-                            child: Container(
-                              height: 28,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                              ),
-                              color: const Color(0xFFD9D9D9),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/msg_icon.png',
-                                    width: 18,
-                                    height: 18,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Flexible(
-                                    child: Text(
-                                      'Seller',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                            child: InkWell(
+                              onTap: () => _openSellerChat(product),
+                              child: Container(
+                                height: 28,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                ),
+                                color: const Color(0xFFD9D9D9),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/msg_icon.png',
+                                      width: 18,
+                                      height: 18,
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 5),
+                                    Flexible(
+                                      child: Text(
+                                        'Seller',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -597,6 +625,39 @@ class _HomeViewState extends State<HomeView> {
         ),
       );
     });
+  }
+
+  void _openSellerChat(HomeProduct product) {
+    final sellerId = product.sellerId;
+    if (sellerId == null || sellerId == 0) {
+      Get.snackbar(
+        'Seller chat',
+        'Seller details are not available for this item.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    final buyerId = Get.find<UserController>().user.value?.userId;
+    if (buyerId == sellerId) {
+      Get.snackbar(
+        'Seller chat',
+        'This is your own item.',
+        snackPosition: SnackPosition.TOP,
+      );
+      return;
+    }
+
+    Get.to(
+      () => UserChatView(
+        sellerId: sellerId,
+        sellerName: product.sellerLabel,
+        itemId: product.id == 0 ? null : product.id,
+        itemTitle: product.title,
+      ),
+    );
   }
 
   Widget _buildAssetImage(

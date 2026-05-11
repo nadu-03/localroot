@@ -10,6 +10,7 @@ import '../../../common/widgets/user_profile_avatar.dart';
 import '../../../util/color_resources.dart';
 import '../controllers/home_controller.dart';
 import 'product_detail_view.dart';
+import 'user_chat_view.dart';
 
 class CategoryProductsView extends StatelessWidget {
   final HomeCategory category;
@@ -201,10 +202,16 @@ class _ProductCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Icon(
-                    Icons.shopping_cart_outlined,
-                    size: 20,
-                    color: Color(0xFF8B5A3C),
+                  InkWell(
+                    onTap: _addToCart,
+                    child: const Padding(
+                      padding: EdgeInsets.all(2),
+                      child: Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 20,
+                        color: Color(0xFF8B5A3C),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -225,47 +232,54 @@ class _ProductCard extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      height: 28,
-                      alignment: Alignment.center,
-                      color: ColorResources.primaryGreen,
-                      child: Text(
-                        'Buy now',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
+                    child: InkWell(
+                      onTap: _addToCart,
+                      child: Container(
+                        height: 28,
+                        alignment: Alignment.center,
+                        color: ColorResources.primaryGreen,
+                        child: Text(
+                          'Buy now',
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 4),
                   Expanded(
-                    child: Container(
-                      height: 28,
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      color: const Color(0xFFD9D9D9),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/msg_icon.png',
-                            width: 18,
-                            height: 18,
-                          ),
-                          const SizedBox(width: 5),
-                          Flexible(
-                            child: Text(
-                              'Seller',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                    child: InkWell(
+                      onTap: _openSellerChat,
+                      child: Container(
+                        height: 28,
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        color: const Color(0xFFD9D9D9),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/msg_icon.png',
+                              width: 18,
+                              height: 18,
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 5),
+                            Flexible(
+                              child: Text(
+                                'Seller',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -276,6 +290,43 @@ class _ProductCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _openSellerChat() {
+    final sellerId = product.sellerId;
+    if (sellerId == null || sellerId == 0) {
+      Get.snackbar(
+        'Seller chat',
+        'Seller details are not available for this item.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    final buyerId = Get.find<UserController>().user.value?.userId;
+    if (buyerId == sellerId) {
+      Get.snackbar(
+        'Seller chat',
+        'This is your own item.',
+        snackPosition: SnackPosition.TOP,
+      );
+      return;
+    }
+
+    Get.to(
+      () => UserChatView(
+        sellerId: sellerId,
+        sellerName: product.sellerLabel,
+        itemId: product.id == 0 ? null : product.id,
+        itemTitle: product.title,
+      ),
+    );
+  }
+
+  void _addToCart() {
+    Get.find<HomeController>().addToCart(product);
   }
 
   Widget _buildAssetImage(String imagePath) {
