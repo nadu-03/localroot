@@ -1,8 +1,8 @@
 class AppConstant {
   // Base URL - Change this to your actual API base URL
   // static const String baseUrl = 'http://localhost:3000/api';
-  static const String baseUrl = 'http://10.0.2.2:3000'; // For emulator testing
-  // static const String baseUrl = 'https://api.example.com'; // For production
+  // static const String baseUrl = 'http://10.0.2.2:3000'; // For emulator testing
+  static const String baseUrl = 'https://sharing-charity-app.onrender.com'; // For production
 
   // Auth Endpoints
   static const String authSignIn = '/auth/signin';

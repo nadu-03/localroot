@@ -145,6 +145,10 @@ class SignUpController extends GetxController {
     Get.toNamed(AppRoutes.login);
   }
 
+  void signUpWithGoogle() {
+    // Google sign up logic
+  }
+
   @override
   void onClose() {
     firstNameController.dispose();

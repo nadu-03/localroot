@@ -269,6 +269,51 @@ class SignUpView extends GetView<SignUpController> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'or continue with',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: ColorResources.textGrey),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 44,
+                          child: OutlinedButton(
+                            onPressed: controller.signUpWithGoogle,
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Color(0xFF353535)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/google.png',
+                                  height: 18,
+                                  width: 18,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(
+                                      Icons.g_mobiledata,
+                                      size: 22,
+                                    );
+                                  },
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Google',
+                                  style: Theme.of(context).textTheme.titleLarge
+                                      ?.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

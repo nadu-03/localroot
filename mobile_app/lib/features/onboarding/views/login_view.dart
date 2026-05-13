@@ -215,7 +215,7 @@ class _LoginViewState extends State<LoginView> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  'assets/images/google_icon.png',
+                                  'assets/images/google.png',
                                   height: 18,
                                   width: 18,
                                   errorBuilder: (context, error, stackTrace) {
