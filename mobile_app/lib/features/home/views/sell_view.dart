@@ -4,6 +4,7 @@ import '../../../common/controllers/user_controller.dart';
 import '../../../common/widgets/user_profile_avatar.dart';
 
 import '../../menu/controllers/menu_controller.dart';
+import '../../menu/widgets/app_menu_drawer.dart';
 import '../../../util/color_resources.dart';
 import '../../seller/views/add_new_item_view.dart';
 import '../../seller/bindings/seller_binding.dart';
@@ -17,6 +18,7 @@ class SellView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFEDEDED),
+      endDrawer: const AppMenuDrawer(),
       body: SafeArea(
         child: Column(
           children: [
@@ -91,7 +93,7 @@ class SellView extends StatelessWidget {
           const Spacer(),
           const Icon(Icons.notifications, color: Colors.black, size: 20),
           const SizedBox(width: 14),
-          const Icon(Icons.menu, color: Colors.black, size: 28),
+          const AppMenuButton(),
         ],
       ),
     );

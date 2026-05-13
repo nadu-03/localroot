@@ -6,6 +6,7 @@ import '../../../util/app_constant.dart';
 import 'package:get/get.dart';
 import '../../../common/controllers/user_controller.dart';
 import '../../../common/widgets/user_profile_avatar.dart';
+import '../../menu/widgets/app_menu_drawer.dart';
 
 import '../../../util/color_resources.dart';
 import '../controllers/home_controller.dart';
@@ -26,6 +27,7 @@ class CategoryProductsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
+      endDrawer: const AppMenuDrawer(),
       body: SafeArea(
         child: Column(
           children: [
@@ -114,7 +116,7 @@ class CategoryProductsView extends StatelessWidget {
               const Spacer(),
               const Icon(Icons.notifications, color: Colors.black, size: 20),
               const SizedBox(width: 14),
-              const Icon(Icons.menu, color: Colors.black, size: 28),
+              const AppMenuButton(),
             ],
           ),
           const SizedBox(height: 14),

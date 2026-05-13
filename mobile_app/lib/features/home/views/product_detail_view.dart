@@ -6,6 +6,7 @@ import '../../../util/app_constant.dart';
 import 'package:get/get.dart';
 
 import '../../../util/color_resources.dart';
+import '../../menu/widgets/app_menu_drawer.dart';
 import '../../../common/controllers/user_controller.dart';
 import '../../../common/widgets/user_profile_avatar.dart';
 import '../controllers/home_controller.dart';
@@ -25,6 +26,7 @@ class ProductDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      endDrawer: const AppMenuDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -249,7 +251,7 @@ class ProductDetailView extends StatelessWidget {
           const Spacer(),
           const Icon(Icons.notifications, color: Colors.black, size: 20),
           const SizedBox(width: 14),
-          const Icon(Icons.menu, color: Colors.black, size: 28),
+          const AppMenuButton(),
         ],
       ),
     );

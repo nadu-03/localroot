@@ -4,6 +4,7 @@ import '../../../common/controllers/user_controller.dart';
 import '../../../common/widgets/user_profile_avatar.dart';
 
 import '../../menu/controllers/menu_controller.dart';
+import '../../menu/widgets/app_menu_drawer.dart';
 import '../../../util/color_resources.dart';
 import '../../../features/home/views/ai_chat_bot_view.dart';
 import '../bindings/donation_binding.dart';
@@ -18,6 +19,7 @@ class DonationView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFEDEDED),
+      endDrawer: const AppMenuDrawer(),
       body: SafeArea(
         child: Column(
           children: [
@@ -89,7 +91,7 @@ class DonationView extends StatelessWidget {
           const Spacer(),
           const Icon(Icons.notifications, color: Colors.black, size: 20),
           const SizedBox(width: 14),
-          const Icon(Icons.menu, color: Colors.black, size: 28),
+          const AppMenuButton(),
         ],
       ),
     );
