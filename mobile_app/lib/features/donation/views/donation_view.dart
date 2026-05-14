@@ -29,6 +29,8 @@ class DonationView extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
                 child: Column(
                   children: [
+                    _buildDashboardCard(),
+                    const SizedBox(height: 10),
                     _buildDonationBanner(context),
                     const SizedBox(height: 14),
                     _buildActionButton(
@@ -93,6 +95,98 @@ class DonationView extends StatelessWidget {
           const SizedBox(width: 14),
           const AppMenuButton(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDashboardCard() {
+    return Container(
+      width: double.infinity,
+      height: 220,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 10,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 10, 8, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Donation DashBoard',
+                    style: TextStyle(
+                      fontSize: 27,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'manage your donation items\nand track your impact here',
+                    style: TextStyle(fontSize: 14, color: Color(0xFF6B6B6B)),
+                  ),
+                  // const Spacer(),
+                  _metricBox('Total donated\nitems', '12 items'),
+               
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 6, 6, 6),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Image.asset(
+                  'assets/images/onboading_slide_2.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _metricBox(String label, String value) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(7, 7, 20, 7),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF2F2F2),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: const Color(0xFFE0E0E0)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+                height: 1.15,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
