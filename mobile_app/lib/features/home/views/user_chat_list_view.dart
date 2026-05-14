@@ -114,7 +114,7 @@ class _UserChatListViewState extends State<UserChatListView> {
           const SizedBox(width: 4),
           Expanded(
             child: Text(
-              widget.title,
+              widget.title.tr,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.black,
                 fontWeight: FontWeight.w700,
@@ -157,7 +157,7 @@ class _UserChatListViewState extends State<UserChatListView> {
             SizedBox(height: MediaQuery.of(context).size.height * 0.25),
             Center(
               child: Text(
-                widget.emptyMessage,
+                widget.emptyMessage.tr,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: const Color(0xFF6F6F6F),
                   fontWeight: FontWeight.w600,

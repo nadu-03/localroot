@@ -9,18 +9,18 @@ class OnboardingController extends GetxController {
   final List<OnboardingItem> slides = [
     OnboardingItem(
       image: 'assets/images/onboading_slide_1.png',
-      title: 'Thrifting',
-      description: 'Find preloved items for a better price',
+      title: 'thrifting',
+      description: 'thrifting_desc',
     ),
     OnboardingItem(
       image: 'assets/images/onboading_slide_2.png',
-      title: 'Donation',
-      description: 'Gift preloved items for a better world',
+      title: 'donation',
+      description: 'donation_desc',
     ),
     OnboardingItem(
       image: 'assets/images/start_screen_image.png',
-      title: 'LocalRoot',
-      description: 'Turn clutter into care',
+      title: 'app_name',
+      description: 'turn_clutter_into_care',
       isGetStarted: true,
     ),
   ];

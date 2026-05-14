@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../features/home/bindings/home_binding.dart';
+import '../features/language/views/language_view.dart';
 import '../features/menu/views/nav_bar_screen.dart';
 import '../features/onboarding/bindings/onboarding_binding.dart';
 import '../features/onboarding/views/onboarding_view.dart';
@@ -30,5 +31,6 @@ class AppPages {
       page: NavBarScreen.new,
       binding: HomeBinding(),
     ),
+    GetPage<dynamic>(name: AppRoutes.language, page: LanguageView.new),
   ];
 }

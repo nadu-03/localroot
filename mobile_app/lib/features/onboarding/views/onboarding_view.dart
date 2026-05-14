@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../util/color_resources.dart';
+import '../../../util/app_routes.dart';
 import '../controllers/onboarding_controller.dart';
 
 class OnboardingView extends GetView<OnboardingController> {
@@ -100,17 +101,17 @@ class OnboardingView extends GetView<OnboardingController> {
                                               fontWeight: FontWeight.w800,
                                               fontSize: 64,
                                             ),
-                                        children: const [
+                                        children: [
                                           TextSpan(
-                                            text: 'Local',
-                                            style: TextStyle(
+                                            text: 'local'.tr,
+                                            style: const TextStyle(
                                               color:
                                                   ColorResources.primaryGreen,
                                             ),
                                           ),
                                           TextSpan(
-                                            text: 'Root',
-                                            style: TextStyle(
+                                            text: 'root'.tr,
+                                            style: const TextStyle(
                                               color: ColorResources.accentBrown,
                                             ),
                                           ),
@@ -119,7 +120,7 @@ class OnboardingView extends GetView<OnboardingController> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Turn clutter into care',
+                                      'turn_clutter_into_care'.tr,
                                       textAlign: TextAlign.center,
                                       style: Theme.of(context)
                                           .textTheme
@@ -140,12 +141,11 @@ class OnboardingView extends GetView<OnboardingController> {
                                               fontWeight: FontWeight.w600,
                                               color: ColorResources.textDark,
                                             ),
-                                        children: const [
-                                          TextSpan(text: 'Buy, Sell, Donate '),
+                                        children: [
+                                          TextSpan(text: 'buy_sell_donate'.tr),
                                           TextSpan(
-                                            text:
-                                                'Gently used items in one place',
-                                            style: TextStyle(
+                                            text: 'gently_used_items'.tr,
+                                            style: const TextStyle(
                                               color: ColorResources.accentBrown,
                                             ),
                                           ),
@@ -164,7 +164,7 @@ class OnboardingView extends GetView<OnboardingController> {
                                             vertical: 12,
                                           ),
                                         ),
-                                        child: const Text('Get started'),
+                                        child: Text('get_started'.tr),
                                       ),
                                     ),
                                   ],
@@ -224,7 +224,7 @@ class OnboardingView extends GetView<OnboardingController> {
                           child: Column(
                             children: [
                               Text(
-                                slide.title,
+                                slide.title.tr,
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.displaySmall
                                     ?.copyWith(
@@ -235,7 +235,7 @@ class OnboardingView extends GetView<OnboardingController> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                slide.description,
+                                slide.description.tr,
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.titleMedium
                                     ?.copyWith(
@@ -289,6 +289,27 @@ class OnboardingView extends GetView<OnboardingController> {
                     ),
                   ],
                 ),
+              ),
+              Obx(
+                () =>
+                    controller.currentPage.value == controller.slides.length - 1
+                    ? Positioned(
+                        top: 12,
+                        right: 12,
+                        child: Material(
+                          color: ColorResources.white,
+                          borderRadius: BorderRadius.circular(24),
+                          child: IconButton(
+                            tooltip: 'change_language'.tr,
+                            onPressed: () => Get.toNamed(AppRoutes.language),
+                            icon: const Icon(
+                              Icons.language,
+                              color: ColorResources.accentBrown,
+                            ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ),
             ],
           ),

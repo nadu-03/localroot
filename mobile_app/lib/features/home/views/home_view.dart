@@ -95,7 +95,9 @@ class _HomeViewState extends State<HomeView> {
               Flexible(
                 child: Obx(
                   () => Text(
-                    'Hi ${userController.user.value?.username ?? 'User'},',
+                    'hi_user'.trParams({
+                      'name': userController.user.value?.username ?? 'User',
+                    }),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -122,9 +124,9 @@ class _HomeViewState extends State<HomeView> {
                 onPressed: () => Get.to(
                   () => const UserChatListView(
                     mode: ChatListMode.buyer,
-                    title: 'Messages',
-                    participantRole: 'Seller',
-                    emptyMessage: 'No seller messages yet',
+                    title: 'messages',
+                    participantRole: 'seller',
+                    emptyMessage: 'no_seller_messages',
                   ),
                 ),
                 icon: const Icon(Icons.message, color: Colors.black, size: 21),
@@ -153,7 +155,7 @@ class _HomeViewState extends State<HomeView> {
                     onSubmitted: (_) => controller.loadProducts(),
                     textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
-                      hintText: 'Find items',
+                      hintText: 'find_items'.tr,
                       hintStyle: Theme.of(context).textTheme.bodyMedium
                           ?.copyWith(
                             color: const Color(0xFF9A9A9A),
@@ -224,7 +226,7 @@ class _HomeViewState extends State<HomeView> {
           Row(
             children: [
               Text(
-                'Categories',
+                'categories'.tr,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.w800,
@@ -249,7 +251,7 @@ class _HomeViewState extends State<HomeView> {
                 height: 86,
                 child: Center(
                   child: Text(
-                    'No categories available',
+                    'no_categories'.tr,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -325,8 +327,8 @@ class _HomeViewState extends State<HomeView> {
             child: Obx(
               () => Text(
                 controller.searchQuery.value.trim().isEmpty
-                    ? 'No items available'
-                    : 'No items found',
+                    ? 'no_items_available'.tr
+                    : 'no_items_found'.tr,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
@@ -443,7 +445,7 @@ class _HomeViewState extends State<HomeView> {
                                 alignment: Alignment.center,
                                 color: ColorResources.primaryGreen,
                                 child: Text(
-                                  'Buy now',
+                                  'buy_now'.tr,
                                   style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(
                                         color: Colors.black,
@@ -474,7 +476,7 @@ class _HomeViewState extends State<HomeView> {
                                     const SizedBox(width: 5),
                                     Flexible(
                                       child: Text(
-                                        'Seller',
+                                        'seller'.tr,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
@@ -508,8 +510,8 @@ class _HomeViewState extends State<HomeView> {
     final sellerId = product.sellerId;
     if (sellerId == null || sellerId == 0) {
       Get.snackbar(
-        'Seller chat',
-        'Seller details are not available for this item.',
+        'seller_chat'.tr,
+        'seller_details_not_available'.tr,
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -520,8 +522,8 @@ class _HomeViewState extends State<HomeView> {
     final buyerId = Get.find<UserController>().user.value?.userId;
     if (buyerId == sellerId) {
       Get.snackbar(
-        'Seller chat',
-        'This is your own item.',
+        'seller_chat'.tr,
+        'own_item_message'.tr,
         snackPosition: SnackPosition.TOP,
       );
       return;

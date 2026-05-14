@@ -39,7 +39,7 @@ class AppMenuDrawer extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.privacy_tip_outlined),
-                    title: const Text('Privacy Policy'),
+                    title: Text('privacy_policy'.tr),
                     onTap: () {
                       Get.back();
                       Get.to(() => const PrivacyPolicyView());
@@ -47,7 +47,7 @@ class AppMenuDrawer extends StatelessWidget {
                   ),
                   ListTile(
                     leading: const Icon(Icons.gavel_outlined),
-                    title: const Text('Terms & Conditions'),
+                    title: Text('terms_conditions'.tr),
                     onTap: () {
                       Get.back();
                       Get.to(() => const TermsConditionsView());
@@ -55,7 +55,7 @@ class AppMenuDrawer extends StatelessWidget {
                   ),
                   ListTile(
                     leading: const Icon(Icons.info_outline),
-                    title: const Text('About Us'),
+                    title: Text('about_us'.tr),
                     onTap: () {
                       Get.back();
                       Get.to(() => const AboutUsView());
@@ -63,10 +63,18 @@ class AppMenuDrawer extends StatelessWidget {
                   ),
                   ListTile(
                     leading: const Icon(Icons.contact_mail_outlined),
-                    title: const Text('Contact Us'),
+                    title: Text('contact_us'.tr),
                     onTap: () {
                       Get.back();
                       Get.to(() => const ContactUsView());
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.language),
+                    title: Text('change_language'.tr),
+                    onTap: () {
+                      Get.back();
+                      Get.toNamed(AppRoutes.language);
                     },
                   ),
                 ],
@@ -77,7 +85,7 @@ class AppMenuDrawer extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
               child: ListTile(
                 leading: const Icon(Icons.logout, color: Colors.redAccent),
-                title: const Text('Log out'),
+                title: Text('log_out'.tr),
                 onTap: () => _showLogoutDialog(context),
               ),
             ),
@@ -92,14 +100,14 @@ class AppMenuDrawer extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Log out'),
-          content: const Text('Are you sure?'),
+          title: Text('log_out'.tr),
+          content: Text('are_you_sure'.tr),
           actions: [
-            TextButton(onPressed: () => Get.back(), child: const Text('No')),
+            TextButton(onPressed: () => Get.back(), child: Text('no'.tr)),
             TextButton(
               onPressed: () async {
-                String snackTitle = 'Success';
-                String snackMessage = 'Logged out successfully';
+                String snackTitle = 'success'.tr;
+                String snackMessage = 'logged_out_successfully'.tr;
                 Color snackColor = Colors.green;
                 try {
                   final resp = await ApiManager.instance.post(
@@ -107,11 +115,11 @@ class AppMenuDrawer extends StatelessWidget {
                   );
                   snackMessage =
                       resp.data?['message']?.toString() ??
-                      'Logged out successfully';
+                      'logged_out_successfully'.tr;
                 } catch (e) {
                   debugPrint('Logout API error: $e');
-                  snackTitle = 'Error';
-                  snackMessage = 'Logout failed';
+                  snackTitle = 'error'.tr;
+                  snackMessage = 'logout_failed'.tr;
                   snackColor = Colors.red;
                 }
                 try {
@@ -130,7 +138,7 @@ class AppMenuDrawer extends StatelessWidget {
                   );
                 });
               },
-              child: const Text('Yes'),
+              child: Text('yes'.tr),
             ),
           ],
         );

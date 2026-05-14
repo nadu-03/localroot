@@ -192,7 +192,7 @@ class _UserChatViewState extends State<UserChatView> {
                   ),
                 ),
                 Text(
-                  widget.participantRole,
+                  widget.participantRole.tr,
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(color: Colors.black87),

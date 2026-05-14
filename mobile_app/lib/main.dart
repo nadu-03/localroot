@@ -7,6 +7,7 @@ import 'util/app_routes.dart';
 import 'util/app_constant.dart';
 import 'theme/app_theme.dart';
 import 'data/api/api_manager.dart';
+import 'features/language/translations/app_translations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,9 @@ class MyApp extends StatelessWidget {
       title: 'Localroot',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
+      translations: AppTranslations(),
+      locale: const Locale('en'),
+      fallbackLocale: const Locale('en'),
       initialBinding: InitialBinding(),
       initialRoute: AppRoutes.onboarding,
       getPages: AppPages.routes,

@@ -8,6 +8,7 @@ class StorageService {
 
   static const String _accessTokenKey = 'accessToken';
   static const String _userDataKey = 'userData';
+  static const String _languageCodeKey = 'languageCode';
 
   factory StorageService() {
     return _instance;
@@ -42,6 +43,14 @@ class StorageService {
       }
     }
     return null;
+  }
+
+  Future<void> saveLanguageCode(String languageCode) async {
+    await _secureStorage.write(key: _languageCodeKey, value: languageCode);
+  }
+
+  Future<String?> getLanguageCode() async {
+    return await _secureStorage.read(key: _languageCodeKey);
   }
 
   // Clear all data (logout)
