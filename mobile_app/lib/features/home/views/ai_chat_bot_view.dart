@@ -72,14 +72,14 @@ class AiChatBotView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'AI Chat Bot',
+                  'ai_chat_bot'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
-                  'Always available',
+                  'always_available'.tr,
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(color: Colors.black87),
@@ -111,7 +111,7 @@ class AiChatBotView extends StatelessWidget {
               ),
               alignment: Alignment.centerLeft,
               child: Text(
-                'Ask about donations...',
+                'ask_about_donations'.tr,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: const Color(0xFF8A8A8A),
                 ),

@@ -16,9 +16,9 @@ class UserChatListView extends StatefulWidget {
   const UserChatListView({
     super.key,
     this.mode = ChatListMode.seller,
-    this.title = 'User Chats',
-    this.participantRole = 'User',
-    this.emptyMessage = 'No user chats yet',
+    this.title = 'user_chats',
+    this.participantRole = 'user',
+    this.emptyMessage = 'no_user_chats',
   });
 
   @override
@@ -43,7 +43,7 @@ class _UserChatListViewState extends State<UserChatListView> {
   Future<void> _loadChats() async {
     final userId = _currentUserId;
     if (userId == null) {
-      setState(() => _error = 'Please log in to view chats.');
+      setState(() => _error = 'please_login_view_chats'.tr);
       return;
     }
 
@@ -67,7 +67,7 @@ class _UserChatListViewState extends State<UserChatListView> {
       setState(() => _error = e.message);
     } catch (_) {
       if (!mounted) return;
-      setState(() => _error = 'Failed to load chats.');
+      setState(() => _error = 'failed_load_chats'.tr);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

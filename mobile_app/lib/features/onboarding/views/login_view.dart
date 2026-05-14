@@ -57,7 +57,7 @@ class _LoginViewState extends State<LoginView> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Login',
+                          'login'.tr,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.displaySmall
                               ?.copyWith(
@@ -72,7 +72,7 @@ class _LoginViewState extends State<LoginView> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
-                            hintText: 'Enter Username/email',
+                            hintText: 'enter_username_email'.tr,
                             fillColor: const Color(0xFFD9D9D9),
                             filled: true,
                             contentPadding: const EdgeInsets.symmetric(
@@ -93,7 +93,7 @@ class _LoginViewState extends State<LoginView> {
                             obscureText: !controller.showPassword.value,
                             textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
-                              hintText: 'Enter Password',
+                              hintText: 'enter_password'.tr,
                               fillColor: const Color(0xFFD9D9D9),
                               filled: true,
                               contentPadding: const EdgeInsets.symmetric(
@@ -139,7 +139,7 @@ class _LoginViewState extends State<LoginView> {
                                     ),
                                   ),
                                   Text(
-                                    'Remember me',
+                                    'remember_me'.tr,
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           color: ColorResources.accentBrown,
@@ -157,7 +157,7 @@ class _LoginViewState extends State<LoginView> {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
-                                'Forgot Password?',
+                                'forgot_password'.tr,
                                 style: Theme.of(context).textTheme.bodySmall
                                     ?.copyWith(
                                       color: ColorResources.accentBrown,
@@ -184,7 +184,7 @@ class _LoginViewState extends State<LoginView> {
                               ),
                             ),
                             child: Text(
-                              'Login',
+                              'login'.tr,
                               style: Theme.of(context).textTheme.titleLarge
                                   ?.copyWith(
                                     color: ColorResources.accentBrown,
@@ -195,7 +195,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'or continue with',
+                          'or_continue_with'.tr,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: ColorResources.textGrey),
@@ -244,7 +244,7 @@ class _LoginViewState extends State<LoginView> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                "Don’t have an account? ",
+                                'dont_have_account'.tr,
                                 style: Theme.of(context).textTheme.titleMedium
                                     ?.copyWith(
                                       color: ColorResources.accentBrown,
@@ -254,7 +254,7 @@ class _LoginViewState extends State<LoginView> {
                               GestureDetector(
                                 onTap: controller.goToSignUp,
                                 child: Text(
-                                  'Sign Up',
+                                  'sign_up'.tr,
                                   style: Theme.of(context).textTheme.titleMedium
                                       ?.copyWith(
                                         color: ColorResources.primaryGreen,

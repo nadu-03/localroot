@@ -31,7 +31,7 @@ class DonationCentersView extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Donation Centers',
+                    'donation_centers'.tr,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: Colors.black,
                       fontWeight: FontWeight.w700,

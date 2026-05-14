@@ -25,7 +25,7 @@ class ProfileView extends GetView<ProfileController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Profile',
+                  'profile'.tr,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.w800,
@@ -115,8 +115,8 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                       child: Text(
                         controller.isSaving.value
-                            ? 'Saving...'
-                            : 'Save Changes',
+                            ? 'saving'.tr
+                            : 'save_changes'.tr,
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(
                               color: ColorResources.accentBrown,
@@ -188,7 +188,7 @@ class ProfileView extends GetView<ProfileController> {
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: const Icon(Icons.photo_camera_outlined),
-                  title: const Text('Camera'),
+                  title: Text('camera'.tr),
                   onTap: () {
                     Navigator.of(bottomSheetContext).pop();
                     _pickImage(ImageSource.camera);
@@ -197,14 +197,14 @@ class ProfileView extends GetView<ProfileController> {
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: const Icon(Icons.photo_library_outlined),
-                  title: const Text('Gallery'),
+                  title: Text('gallery'.tr),
                   onTap: () {
                     Navigator.of(bottomSheetContext).pop();
                     _pickImage(ImageSource.gallery);
                   },
                 ),
-                const Text(
-                  'Select Profile Picture',
+                Text(
+                  'select_profile_picture'.tr,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 12),

@@ -62,12 +62,12 @@ class _AddNewItemViewState extends State<AddNewItemView> {
             children: [
               ListTile(
                 leading: const Icon(Icons.photo_camera_outlined),
-                title: const Text('Camera'),
+                title: Text('camera'.tr),
                 onTap: () => Navigator.of(sheetContext).pop(ImageSource.camera),
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library_outlined),
-                title: const Text('Gallery'),
+                title: Text('gallery'.tr),
                 onTap: () =>
                     Navigator.of(sheetContext).pop(ImageSource.gallery),
               ),
@@ -158,7 +158,7 @@ class _AddNewItemViewState extends State<AddNewItemView> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Add New Item',
+                  'add_new_item'.tr,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.w700,
@@ -330,7 +330,7 @@ class _AddNewItemViewState extends State<AddNewItemView> {
                               ),
                             )
                           : Text(
-                              'Add Item',
+                              'add_item'.tr,
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(
                                     color: ColorResources.accentBrown,

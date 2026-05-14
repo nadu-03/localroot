@@ -44,15 +44,15 @@ class DonationController extends GetxController {
     } on ApiException catch (e) {
       donationCentersError.value = e.message;
       Get.snackbar(
-        'Donation Centers',
+        'donation_centers'.tr,
         e.message,
         snackPosition: SnackPosition.TOP,
       );
     } catch (_) {
-      const message = 'Failed to load donation centers';
+      final message = 'failed_load_donation_centers'.tr;
       donationCentersError.value = message;
       Get.snackbar(
-        'Donation Centers',
+        'donation_centers'.tr,
         message,
         snackPosition: SnackPosition.TOP,
       );

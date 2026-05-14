@@ -36,7 +36,7 @@ class DonationView extends StatelessWidget {
                     _buildActionButton(
                       context,
                       icon: Icons.add_box_outlined,
-                      title: 'Add Donation Item',
+                      title: 'add_donation_item',
                       onTap: () => Get.to(
                         () => const AddNewItemView(),
                         binding: SellerBinding(),
@@ -46,14 +46,14 @@ class DonationView extends StatelessWidget {
                     _buildActionButton(
                       context,
                       icon: Icons.chat_bubble_outline,
-                      title: 'AI Chat Bot',
+                      title: 'ai_chat_bot',
                       onTap: () => Get.to(() => const AiChatBotView()),
                     ),
                     const SizedBox(height: 10),
                     _buildActionButton(
                       context,
                       icon: Icons.location_on_outlined,
-                      title: 'See Donation Centers',
+                      title: 'see_donation_centers',
                       onTap: () => Get.to(
                         () => const DonationCentersView(),
                         binding: DonationBinding(),
@@ -83,7 +83,9 @@ class DonationView extends StatelessWidget {
           Obx(() {
             final userController = Get.find<UserController>();
             return Text(
-              'Hi ${userController.user.value?.username ?? 'User'},',
+              'hi_user'.trParams({
+                'name': userController.user.value?.username ?? 'user'.tr,
+              }),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
@@ -117,8 +119,8 @@ class DonationView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 6),
-                  const Text(
-                    'Donation DashBoard',
+                  Text(
+                    'donation_dashboard'.tr,
                     style: TextStyle(
                       fontSize: 27,
                       fontWeight: FontWeight.w700,
@@ -126,12 +128,12 @@ class DonationView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  const Text(
-                    'manage your donation items\nand track your impact here',
+                  Text(
+                    'donation_dashboard_subtitle'.tr,
                     style: TextStyle(fontSize: 14, color: Color(0xFF6B6B6B)),
                   ),
                   // const Spacer(),
-                  _metricBox('Total donated\nitems', '12 items'),
+                  _metricBox('total_donated_items'.tr, '12 items'),
                
                 ],
               ),
@@ -237,7 +239,7 @@ class DonationView extends StatelessWidget {
             const SizedBox(width: 24),
             Expanded(
               child: Text(
-                title,
+                title.tr,
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontSize: 22,

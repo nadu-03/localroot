@@ -33,7 +33,7 @@ class DonationView extends StatelessWidget {
                     _buildActionButton(
                       context,
                       icon: Icons.add_box_outlined,
-                      title: 'Add Item',
+                      title: 'add_item',
                       onTap: () => Get.to(
                         () => const AddNewItemView(),
                         binding: SellerBinding(),
@@ -43,14 +43,14 @@ class DonationView extends StatelessWidget {
                     _buildActionButton(
                       context,
                       icon: Icons.chat_bubble_outline,
-                      title: 'AI Chat Bot',
+                      title: 'ai_chat_bot',
                       onTap: () => Get.to(() => const AiChatBotView()),
                     ),
                     const SizedBox(height: 10),
                     _buildActionButton(
                       context,
                       icon: Icons.location_on_outlined,
-                      title: 'See Donation Centers',
+                      title: 'see_donation_centers',
                       onTap: () => Get.to(() => const DonationCentersView()),
                     ),
                   ],
@@ -77,7 +77,9 @@ class DonationView extends StatelessWidget {
           Obx(() {
             final userController = Get.find<UserController>();
             return Text(
-              'Hi ${userController.user.value?.username ?? 'User'},',
+              'hi_user'.trParams({
+                'name': userController.user.value?.username ?? 'user'.tr,
+              }),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
@@ -139,7 +141,7 @@ class DonationView extends StatelessWidget {
             const SizedBox(width: 24),
             Expanded(
               child: Text(
-                title,
+                title.tr,
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontSize: 22,

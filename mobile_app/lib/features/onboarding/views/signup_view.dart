@@ -47,7 +47,7 @@ class SignUpView extends GetView<SignUpController> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Sign Up',
+                          'sign_up'.tr,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.displaySmall
                               ?.copyWith(
@@ -60,7 +60,7 @@ class SignUpView extends GetView<SignUpController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Already have an account? ',
+                              'already_have_account'.tr,
                               style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(
                                     color: ColorResources.accentBrown,
@@ -70,7 +70,7 @@ class SignUpView extends GetView<SignUpController> {
                             GestureDetector(
                               onTap: controller.goToLogin,
                               child: Text(
-                                'Login',
+                                'login'.tr,
                                 style: Theme.of(context).textTheme.titleMedium
                                     ?.copyWith(
                                       color: ColorResources.primaryGreen,
@@ -88,7 +88,7 @@ class SignUpView extends GetView<SignUpController> {
                               controller.validateName(value, 'First name'),
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
-                            hintText: 'Enter First Name',
+                            hintText: 'enter_first_name'.tr,
                             fillColor: const Color(0xFFD9D9D9),
                             filled: true,
                             contentPadding: const EdgeInsets.symmetric(
@@ -108,7 +108,7 @@ class SignUpView extends GetView<SignUpController> {
                               controller.validateName(value, 'Last name'),
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
-                            hintText: 'Enter Last Name',
+                            hintText: 'enter_last_name'.tr,
                             fillColor: const Color(0xFFD9D9D9),
                             filled: true,
                             contentPadding: const EdgeInsets.symmetric(
@@ -128,7 +128,7 @@ class SignUpView extends GetView<SignUpController> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
-                            hintText: 'Enter email address',
+                            hintText: 'enter_email_address'.tr,
                             fillColor: const Color(0xFFD9D9D9),
                             filled: true,
                             contentPadding: const EdgeInsets.symmetric(
@@ -149,7 +149,7 @@ class SignUpView extends GetView<SignUpController> {
                             obscureText: !controller.showPassword.value,
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
-                              hintText: 'Create Password',
+                              hintText: 'create_password'.tr,
                               fillColor: const Color(0xFFD9D9D9),
                               filled: true,
                               contentPadding: const EdgeInsets.symmetric(
@@ -181,7 +181,7 @@ class SignUpView extends GetView<SignUpController> {
                             obscureText: !controller.showConfirmPassword.value,
                             textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
-                              hintText: 'Confirm Password',
+                              hintText: 'confirm_password'.tr,
                               fillColor: const Color(0xFFD9D9D9),
                               filled: true,
                               contentPadding: const EdgeInsets.symmetric(
@@ -227,7 +227,7 @@ class SignUpView extends GetView<SignUpController> {
                                     ),
                                   ),
                                   Text(
-                                    'Remember me',
+                                    'remember_me'.tr,
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           color: ColorResources.accentBrown,
@@ -238,7 +238,7 @@ class SignUpView extends GetView<SignUpController> {
                               ),
                             ),
                             Text(
-                              'Forgot Password?',
+                              'forgot_password'.tr,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     color: ColorResources.accentBrown,
@@ -260,7 +260,7 @@ class SignUpView extends GetView<SignUpController> {
                               ),
                             ),
                             child: Text(
-                              'Sign Up',
+                              'sign_up'.tr,
                               style: Theme.of(context).textTheme.titleLarge
                                   ?.copyWith(
                                     color: ColorResources.accentBrown,
@@ -271,7 +271,7 @@ class SignUpView extends GetView<SignUpController> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          'or continue with',
+                          'or_continue_with'.tr,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: ColorResources.textGrey),

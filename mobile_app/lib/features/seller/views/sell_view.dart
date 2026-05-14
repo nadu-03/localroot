@@ -34,7 +34,7 @@ class SellView extends StatelessWidget {
                     const SizedBox(height: 15),
                     _buildActionButton(
                       icon: Icons.add_business_outlined,
-                      title: 'Add New Item',
+                      title: 'add_new_item',
                       onTap: () => Get.to(
                         () => const AddNewItemView(),
                         binding: SellerBinding(),
@@ -43,7 +43,7 @@ class SellView extends StatelessWidget {
                     const SizedBox(height: 10),
                     _buildActionButton(
                       icon: Icons.view_list_outlined,
-                      title: 'View Listing',
+                      title: 'view_listing',
                       onTap: () => Get.to(
                         () => const ViewListingView(),
                         binding: SellerBinding(),
@@ -53,13 +53,13 @@ class SellView extends StatelessWidget {
                     _buildActionButton(
                       icon: Icons.forum_outlined,
                       imagePath: 'assets/images/msg_white_icon.png',
-                      title: 'User Chat',
+                      title: 'user_chat',
                       onTap: () => Get.to(
                         () => const UserChatListView(
                           mode: ChatListMode.seller,
-                          title: 'User Chats',
-                          participantRole: 'User',
-                          emptyMessage: 'No buyer messages yet',
+                          title: 'user_chats',
+                          participantRole: 'user',
+                          emptyMessage: 'no_buyer_messages',
                         ),
                       ),
                     ),
@@ -87,7 +87,9 @@ class SellView extends StatelessWidget {
           Obx(() {
             final userController = Get.find<UserController>();
             return Text(
-              'Hi ${userController.user.value?.username ?? 'User'},',
+              'hi_user'.trParams({
+                'name': userController.user.value?.username ?? 'user'.tr,
+              }),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
@@ -121,8 +123,8 @@ class SellView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 6),
-                  const Text(
-                    'Seller Dashboard',
+                  Text(
+                    'seller_dashboard'.tr,
                     style: TextStyle(
                       fontSize: 27,
                       fontWeight: FontWeight.w700,
@@ -130,16 +132,16 @@ class SellView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  const Text(
-                    'manage your trift items\nand track your sales here',
+                  Text(
+                    'seller_dashboard_subtitle'.tr,
                     style: TextStyle(fontSize: 14, color: Color(0xFF6B6B6B)),
                   ),
                   const Spacer(),
                   Row(
                     children: [
-                      _metricBox('Total sold\nitems', '12 items'),
+                      _metricBox('total_sold_items'.tr, '12 items'),
                       const SizedBox(width: 6),
-                      _metricBox('Total\nIncome', '7000LKR'),
+                      _metricBox('total_income'.tr, '7000LKR'),
                     ],
                   ),
                 ],
@@ -253,7 +255,7 @@ class SellView extends StatelessWidget {
             ),
             const SizedBox(width: 36),
             Text(
-              title,
+              title.tr,
               style: const TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w600,

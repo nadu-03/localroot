@@ -26,7 +26,7 @@ class DonationCentersView extends GetView<DonationController> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Donation Centers',
+                    'donation_centers'.tr,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: Colors.black,
                       fontWeight: FontWeight.w700,
@@ -46,7 +46,7 @@ class DonationCentersView extends GetView<DonationController> {
                     return _DonationCentersMessage(
                       icon: Icons.error_outline,
                       message: controller.donationCentersError.value,
-                      buttonText: 'Try Again',
+                      buttonText: 'try_again',
                       onPressed: controller.loadDonationCenters,
                     );
                   }
@@ -55,8 +55,8 @@ class DonationCentersView extends GetView<DonationController> {
                   if (centers.isEmpty) {
                     return _DonationCentersMessage(
                       icon: Icons.location_off_outlined,
-                      message: 'No donation centers available',
-                      buttonText: 'Refresh',
+                      message: 'no_donation_centers_available'.tr,
+                      buttonText: 'refresh',
                       onPressed: controller.loadDonationCenters,
                     );
                   }
@@ -95,7 +95,7 @@ class _DonationCenterCard extends StatelessWidget {
         ? center.location
         : center.description.isNotEmpty
             ? center.description
-            : 'Location not provided';
+            : 'location_not_provided'.tr;
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -198,7 +198,7 @@ class _DonationCentersMessage extends StatelessWidget {
                 backgroundColor: ColorResources.primaryGreen,
                 foregroundColor: Colors.black,
               ),
-              child: Text(buttonText),
+              child: Text(buttonText.tr),
             ),
           ],
         ),
