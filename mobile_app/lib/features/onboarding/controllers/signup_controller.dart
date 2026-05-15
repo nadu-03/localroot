@@ -4,8 +4,8 @@ import '../../../util/app_routes.dart';
 import '../../../util/app_constant.dart';
 import '../../../data/api/api_manager.dart';
 import '../../../data/storage/storage_service.dart';
-import '../../../common/models/user_model.dart';
 import '../../../common/controllers/user_controller.dart';
+import 'auth_response.dart';
 
 class SignUpController extends GetxController {
   late TextEditingController firstNameController;
@@ -106,29 +106,19 @@ class SignUpController extends GetxController {
         data: payload,
       );
       if (resp.statusCode == 200 || resp.statusCode == 201) {
-        final data = resp.data['data'];
-        final token = data['token']?.toString();
+        final auth = parseAuthResponse(resp.data);
+        await storageService.saveToken(auth.token);
 
-        if (token != null && token.isNotEmpty) {
-          await storageService.saveToken(token);
-
-          if (data['user'] != null) {
-            final user = UserModel.fromJson(data['user']);
-            await storageService.saveUserData(user);
-            try {
-              final userController = Get.find<UserController>();
-              await userController.updateUserData(user);
-            } catch (_) {}
-          }
-
-          Get.offAllNamed(AppRoutes.home);
-        } else {
-          Get.snackbar(
-            'Sign up failed',
-            'Missing authentication token',
-            snackPosition: SnackPosition.TOP,
-          );
+        final user = auth.user;
+        if (user != null) {
+          await storageService.saveUserData(user);
+          try {
+            final userController = Get.find<UserController>();
+            await userController.updateUserData(user);
+          } catch (_) {}
         }
+
+        Get.offAllNamed(AppRoutes.home);
       } else {
         Get.snackbar(
           'Sign up failed',
@@ -137,7 +127,11 @@ class SignUpController extends GetxController {
         );
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.TOP);
+      Get.snackbar(
+        'Sign up failed',
+        authErrorMessage(e),
+        snackPosition: SnackPosition.TOP,
+      );
     }
   }
 

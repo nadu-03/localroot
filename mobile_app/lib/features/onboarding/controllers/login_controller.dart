@@ -5,8 +5,8 @@ import '../../../util/app_constant.dart';
 import '../../../data/api/api_manager.dart';
 import '../../../data/api/api_exceptions.dart';
 import '../../../data/storage/storage_service.dart';
-import '../../../common/models/user_model.dart';
 import '../../../common/controllers/user_controller.dart';
+import 'auth_response.dart';
 
 class LoginController extends GetxController {
   late TextEditingController emailController;
@@ -57,29 +57,19 @@ class LoginController extends GetxController {
         data: {'email': email, 'password': password},
       );
       if (resp.statusCode == 200) {
-        final data = resp.data['data'];
-        final token = data['token']?.toString();
+        final auth = parseAuthResponse(resp.data);
+        await storageService.saveToken(auth.token);
 
-        if (token != null && token.isNotEmpty) {
-          await storageService.saveToken(token);
-
-          if (data['user'] != null) {
-            final user = UserModel.fromJson(data['user']);
-            await storageService.saveUserData(user);
-            try {
-              final userController = Get.find<UserController>();
-              await userController.updateUserData(user);
-            } catch (_) {}
-          }
-
-          Get.offAllNamed(AppRoutes.home);
-        } else {
-          Get.snackbar(
-            'Login failed',
-            'Missing authentication token',
-            snackPosition: SnackPosition.TOP,
-          );
+        final user = auth.user;
+        if (user != null) {
+          await storageService.saveUserData(user);
+          try {
+            final userController = Get.find<UserController>();
+            await userController.updateUserData(user);
+          } catch (_) {}
         }
+
+        Get.offAllNamed(AppRoutes.home);
       } else {
         Get.snackbar(
           'Login failed',
@@ -88,7 +78,11 @@ class LoginController extends GetxController {
         );
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.TOP);
+      Get.snackbar(
+        'Login failed',
+        authErrorMessage(e),
+        snackPosition: SnackPosition.TOP,
+      );
     }
   }
 
