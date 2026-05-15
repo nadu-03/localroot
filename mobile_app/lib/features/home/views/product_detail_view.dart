@@ -134,26 +134,43 @@ class ProductDetailView extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                child: SizedBox(
-                  height: 42,
-                  child: ElevatedButton(
-                    onPressed: () =>
-                        Get.find<HomeController>().addToCart(product),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorResources.primaryGreen,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
+                child: Obx(() {
+                  final homeController = Get.isRegistered<HomeController>()
+                      ? Get.find<HomeController>()
+                      : Get.put(HomeController());
+                  final isLoading = homeController.isStartingPayment.value;
+                  return SizedBox(
+                    height: 42,
+                    child: ElevatedButton(
+                      onPressed: isLoading
+                          ? null
+                          : () => homeController.startBuyNow(product),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorResources.primaryGreen,
+                        disabledBackgroundColor: const Color(0xFFD9D9D9),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      'Buy Now',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700,
+                      child: isLoading
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.black,
+                              ),
+                            )
+                          : const Text(
+                              'Buy Now',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
                       ),
-                    ),
-                  ),
-                ),
+                  );
+                }),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),

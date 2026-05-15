@@ -11,6 +11,7 @@ import '../../../util/color_resources.dart';
 import '../../../common/controllers/user_controller.dart';
 import '../../../common/widgets/user_profile_avatar.dart';
 import '../controllers/home_controller.dart';
+import 'cart_view.dart';
 import 'notification_view.dart';
 import 'product_detail_view.dart';
 import 'user_chat_list_view.dart';
@@ -108,6 +109,51 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               const Spacer(),
+              Obx(
+                () => Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    IconButton(
+                      onPressed: () => Get.to(() => const CartView()),
+                      icon: const Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Colors.black,
+                        size: 21,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 24,
+                        minHeight: 24,
+                      ),
+                    ),
+                    if (controller.cartItems.isNotEmpty)
+                      Positioned(
+                        right: -2,
+                        top: -4,
+                        child: Container(
+                          // minWidth: 16,
+                          height: 16,
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF8B5A3C),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            controller.cartItems.length.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
               IconButton(
                 onPressed: () => Get.to(() => const NotificationView()),
                 icon: const Icon(
@@ -408,16 +454,26 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () => controller.addToCart(product),
-                            child: const Padding(
-                              padding: EdgeInsets.all(2),
-                              child: Icon(
-                                Icons.shopping_cart_outlined,
-                                size: 20,
-                                color: Color(0xFF8B5A3C),
-                              ),
-                            ),
+                          Obx(
+                            () {
+                              final isInCart = controller.isInCart(product);
+                              return IconButton(
+                                visualDensity: VisualDensity.compact,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                  minWidth: 28,
+                                  minHeight: 28,
+                                ),
+                                onPressed: () => controller.toggleCart(product),
+                                icon: Icon(
+                                  isInCart
+                                      ? Icons.shopping_cart
+                                      : Icons.shopping_cart_outlined,
+                                  size: 20,
+                                  color: const Color(0xFF8B5A3C),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -438,19 +494,21 @@ class _HomeViewState extends State<HomeView> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: InkWell(
-                              onTap: () => controller.addToCart(product),
-                              child: Container(
-                                height: 28,
-                                alignment: Alignment.center,
-                                color: ColorResources.primaryGreen,
+                            child: SizedBox(
+                              height: 28,
+                              child: ElevatedButton(
+                                onPressed: () => controller.startBuyNow(product),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: ColorResources.primaryGreen,
+                                  foregroundColor: Colors.black,
+                                  elevation: 0,
+                                  padding: EdgeInsets.zero,
+                                  shape: const RoundedRectangleBorder(),
+                                ),
                                 child: Text(
                                   'buy_now'.tr,
                                   style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      ?.copyWith(fontWeight: FontWeight.w600),
                                 ),
                               ),
                             ),

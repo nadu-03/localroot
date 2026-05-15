@@ -40,9 +40,21 @@ class AppConstant {
   static const String sendChatMessage = '/messages';
   static const String getUserChats = '/chat/conversations';
 
+  // Chatbot Endpoints
+  static const String chatbotDonation = '/chatbot/donation';
+  static const String chatbotHistory = '/chatbot/history';
+
   // Notification Endpoints
   static const String getNotifications = '/notifications';
   static const String markNotificationAsRead = '/notifications/read';
+
+  // Payment Endpoints
+  static const String createPayherePayment = '/payments/payhere/create';
+  static const String payhereReturnUrl = '$baseUrl/payments/success';
+  static const String payhereCancelUrl = '$baseUrl/payments/cancel';
+
+  // Transaction Endpoints
+  static const String transactions = '/transactions';
 
   // Search Endpoints
   static const String searchProducts = '/search/products';

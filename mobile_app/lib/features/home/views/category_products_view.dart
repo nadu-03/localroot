@@ -204,16 +204,24 @@ class _ProductCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap: _addToCart,
-                    child: const Padding(
-                      padding: EdgeInsets.all(2),
-                      child: Icon(
-                        Icons.shopping_cart_outlined,
-                        size: 20,
-                        color: Color(0xFF8B5A3C),
-                      ),
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(
+                      minWidth: 28,
+                      minHeight: 28,
                     ),
+                    onPressed: _toggleCart,
+                    icon: Obx(() {
+                      final isInCart = _homeController().isInCart(product);
+                      return Icon(
+                        isInCart
+                            ? Icons.shopping_cart
+                            : Icons.shopping_cart_outlined,
+                        size: 20,
+                        color: const Color(0xFF8B5A3C),
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -234,19 +242,21 @@ class _ProductCard extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: InkWell(
-                      onTap: _addToCart,
-                      child: Container(
-                        height: 28,
-                        alignment: Alignment.center,
-                        color: ColorResources.primaryGreen,
+                    child: SizedBox(
+                      height: 28,
+                      child: ElevatedButton(
+                        onPressed: _buyNow,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ColorResources.primaryGreen,
+                          foregroundColor: Colors.black,
+                          elevation: 0,
+                          padding: EdgeInsets.zero,
+                          shape: const RoundedRectangleBorder(),
+                        ),
                         child: Text(
                           'Buy now',
                           style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -327,8 +337,16 @@ class _ProductCard extends StatelessWidget {
     );
   }
 
-  void _addToCart() {
-    Get.find<HomeController>().addToCart(product);
+  void _buyNow() {
+    _homeController().startBuyNow(product);
+  }
+
+  void _toggleCart() {
+    _homeController().toggleCart(product);
+  }
+
+  HomeController _homeController() {
+    return Get.find<HomeController>();
   }
 
   Widget _buildAssetImage(String imagePath) {

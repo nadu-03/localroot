@@ -7,6 +7,7 @@ const donationController = require('../controllers/donationController');
 const chatbotController = require('../controllers/chatbotController');
 const messageController = require('../controllers/messageController');
 const charityController = require('../controllers/charityController');
+const payhereController = require('../controllers/payhereController');
 const authRoutes = require('./auth');
 const categoriesRoutes = require('./categories');
 const chatbotRoutes = require('./chatbot.routes');
@@ -40,6 +41,11 @@ router.get('/transactions/:id', transactionController.get);
 router.post('/transactions', transactionController.create);
 router.put('/transactions/:id', transactionController.update);
 router.delete('/transactions/:id', transactionController.remove);
+
+router.post('/payments/payhere/create', payhereController.create);
+router.post('/payments/payhere/notify', payhereController.notify);
+router.get('/payments/success', (req, res) => res.status(200).send('Payment completed. You can return to the app.'));
+router.get('/payments/cancel', (req, res) => res.status(200).send('Payment cancelled. You can return to the app.'));
 
 router.get('/donations', donationController.list);
 router.get('/donations/donor/:donorId', donationController.listByDonor);
