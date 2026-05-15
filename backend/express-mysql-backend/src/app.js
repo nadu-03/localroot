@@ -7,11 +7,11 @@ const { sequelize } = require('./models');
 const responseFormatter = require('./middleware/responseFormatter');
 const requestLogger = require('./middleware/requestLogger');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 // requestLogger logs request/response details to logs/requests.log and console
 app.use(requestLogger);
 app.use(morgan('dev'));
@@ -41,6 +41,13 @@ const IMAGE_STORAGE_PATH = process.env.IMAGE_STORAGE_PATH || path.resolve(__dirn
 ensureDir = (dir) => { if (!require('fs').existsSync(dir)) require('fs').mkdirSync(dir, { recursive: true }); };
 ensureDir(IMAGE_STORAGE_PATH);
 app.use('/images', express.static(IMAGE_STORAGE_PATH));
+
+// Serve admin SPA (single-file React build in src/admin)
+const adminStaticPath = path.join(__dirname, 'admin');
+if (fs.existsSync(adminStaticPath)) {
+  app.use('/admin', express.static(adminStaticPath));
+  app.get('/admin/*', (req, res) => res.sendFile(path.join(adminStaticPath, 'index.html')));
+}
 
 app.use((err, req, res, next) => {
   console.error(err);
